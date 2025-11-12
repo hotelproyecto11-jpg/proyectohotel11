@@ -1,0 +1,11 @@
+C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\bin\Debug\net9.0\PricingMvp.Domain.deps.json
+C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\bin\Debug\net9.0\PricingMvp.Domain.dll
+C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\bin\Debug\net9.0\PricingMvp.Domain.pdb
+C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\PricingMvp.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\PricingMvp.Domain.AssemblyInfoInputs.cache
+C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\PricingMvp.Domain.AssemblyInfo.cs
+C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\PricingMvp.Domain.csproj.CoreCompileInputs.cache
+C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\PricingMvp.Domain.dll
+C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\refint\PricingMvp.Domain.dll
+C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\PricingMvp.Domain.pdb
+C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\ref\PricingMvp.Domain.dll
