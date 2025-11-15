@@ -76,8 +76,16 @@ namespace PricingMvp.Infrastructure.Services
             };
             
             _context.PriceHistories.Add(priceHistory);
+
+            // Además actualizar el precio base de la habitación para reflejar el cambio inmediato
+            var room = await _context.Rooms.FindAsync(roomId);
+            if (room != null)
+            {
+                room.BasePrice = newPrice;
+            }
+
             await _context.SaveChangesAsync();
-            
+
             return true;
         }
     }
