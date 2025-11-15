@@ -48,6 +48,43 @@ namespace PricingMvp.Api.Controllers
                 FullName = user.FullName
             });
         }
+
+        [HttpPost("register")]
+        public async Task<ActionResult> Register([FromBody] PricingMvp.Application.DTOs.RegisterRequestDto request)
+        {
+            // Validar existencia
+            var existing = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+            if (existing != null)
+                return BadRequest(new { message = "Usuario ya existe" });
+
+            // Determinar rol solicitado
+            Domain.Enums.UserRole role = Domain.Enums.UserRole.StaffOperativo; // default
+            if (!string.IsNullOrWhiteSpace(request.Role))
+            {
+                if (Enum.TryParse<Domain.Enums.UserRole>(request.Role, out var parsed))
+                {
+                    // Rechazar intentos de registrarse como Admin
+                    if (parsed == Domain.Enums.UserRole.Admin)
+                        return BadRequest(new { message = "No se puede registrar como Admin" });
+                    
+                    role = parsed;
+                }
+            }
+
+            var user = new Domain.Entities.User
+            {
+                Email = request.Email,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
+                FullName = request.FullName,
+                Role = role,
+                IsActive = true
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Usuario creado", email = user.Email, role = user.Role.ToString() });
+        }
         
         private string GenerateJwtToken(Domain.Entities.User user)
         {

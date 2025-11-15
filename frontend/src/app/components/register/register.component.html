@@ -1,0 +1,27 @@
+<div style="padding:20px; max-width:420px; margin:40px auto;">
+  <h2>Registro de usuario</h2>
+
+  <form (ngSubmit)="onSubmit()">
+    <div style="margin:10px 0;">
+      <input type="text" [(ngModel)]="fullName" name="fullName" placeholder="Nombre completo" required />
+    </div>
+    <div style="margin:10px 0;">
+      <input type="email" [(ngModel)]="email" name="email" placeholder="Email" required />
+    </div>
+    <div style="margin:10px 0;">
+      <input type="password" [(ngModel)]="password" name="password" placeholder="Contraseña" required />
+    </div>
+    <div style="margin:10px 0;">
+      <label>Rol (por defecto: Staff Operativo)</label>
+      <select [(ngModel)]="role" name="role">
+        <option *ngFor="let r of roles" [value]="r.value">{{ r.label }}</option>
+      </select>
+    </div>
+
+    <div style="margin-top:15px;">
+      <button type="submit">Registrar</button>
+    </div>
+
+    <div *ngIf="errorMessage" style="color:red; margin-top:10px;">{{ errorMessage }}</div>
+  </form>
+</div>

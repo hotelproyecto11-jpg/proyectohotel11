@@ -50,6 +50,10 @@ export class AuthService {
       );
   }
 
+  register(payload: { email: string; password: string; fullName: string; role?: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/auth/register`, payload);
+  }
+
   logout(): void {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('token');

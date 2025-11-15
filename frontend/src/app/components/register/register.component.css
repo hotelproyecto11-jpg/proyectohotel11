@@ -1,0 +1,9 @@
+/* Minimal styles for register form */
+input, select {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+button {
+  padding: 8px 12px;
+}

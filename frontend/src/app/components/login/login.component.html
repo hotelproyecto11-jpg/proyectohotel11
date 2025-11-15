@@ -1,0 +1,31 @@
+<div style="padding: 20px; text-align: center; margin-top: 50px;">
+  <h1>Pricing MVP - Login</h1>
+  <p>Si ves esto, Angular est� funcionando.</p>
+  <form (ngSubmit)="onSubmit()">
+    <div style="margin: 15px 0;">
+      <input 
+        type="email" 
+        [(ngModel)]="email" 
+        name="email" 
+        placeholder="Email" 
+        required 
+      />
+    </div>
+    <div style="margin: 15px 0;">
+      <input 
+        type="password" 
+        [(ngModel)]="password" 
+        name="password" 
+        placeholder="Contrase�a" 
+        required 
+      />
+    </div>
+    <button type="submit">Iniciar Sesi�n</button>
+  </form>
+  <div *ngIf="errorMessage" style="color: red; margin-top: 15px;">
+    {{ errorMessage }}
+  </div>
+  <div style="margin-top: 20px; text-align: center;">
+    <p>¿No tienes cuenta? <a routerLink="/register" style="color: #007bff; cursor: pointer;">Regístrate aquí</a></p>
+  </div>
+</div>
