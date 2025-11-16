@@ -1,0 +1,42 @@
+# .gitignore for .NET + Node frontend
+
+# Visual Studio / .NET
+bin/
+obj/
+*.user
+*.vs
+.vscode/
+*.suo
+*.userprefs
+
+# Build results
+**/bin/
+**/obj/
+
+# NPM
+node_modules/
+/dist/
+/build/
+
+# Angular
+.angular/
+
+# Logs
+*.log
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Local environment
+appsettings.Development.json
+.env
+
+# JetBrains
+.idea/
+
+# Others
+*.db
+*.sqlite
+

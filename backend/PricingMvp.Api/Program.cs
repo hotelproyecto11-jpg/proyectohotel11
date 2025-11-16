@@ -21,6 +21,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IApplicationDbContext>(provider => 
     provider.GetRequiredService<ApplicationDbContext>());
 builder.Services.AddScoped<IPricingService, PricingService>();
+// ML pricing client (punto de integración con servicio Python). Ajustar URL en appsettings si hace falta.
+builder.Services.AddHttpClient<PricingMvp.Infrastructure.Services.MlPricingClient>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["MlService:BaseUrl"] ?? "http://localhost:8000");
+});
 
 // 3. Configurar MediatR
 builder.Services.AddMediatR(cfg => 

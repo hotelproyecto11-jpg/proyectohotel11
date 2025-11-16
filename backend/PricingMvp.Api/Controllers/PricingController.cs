@@ -17,27 +17,33 @@ namespace PricingMvp.Api.Controllers
         }
         
         // GET: api/pricing/suggest/5?date=2025-12-25
+        [AllowAnonymous]
         [HttpGet("suggest/{roomId}")]
-        public async Task<ActionResult<decimal>> GetSuggestedPrice(
-            int roomId, 
+        public async Task<ActionResult> GetSuggestedPrice(
+            int roomId,
             [FromQuery] DateTime? date = null)
         {
             try
             {
                 var targetDate = date ?? DateTime.UtcNow.AddDays(1);
-                var suggestedPrice = await _pricingService.CalculateSuggestedPriceAsync(roomId, targetDate);
-                
-                return Ok(new 
-                { 
+                var result = await _pricingService.CalculateSuggestedPriceAsync(roomId, targetDate);
+
+                return Ok(new
+                {
                     roomId = roomId,
                     targetDate = targetDate.ToString("yyyy-MM-dd"),
-                    suggestedPrice = suggestedPrice,
-                    currency = "MXN"
+                    suggestedPrice = result.SuggestedPrice,
+                    currency = "MXN",
+                    basePriceUsed = result.BasePriceUsed,
+                    avgOccupancy = result.AvgOccupancy,
+                    hadHistory = result.HadHistory,
+                    priceSource = result.PriceSource
                 });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { message = ex.Message });
+                // Devolver un mensaje claro para que el frontend pueda mostrarlo
+                return BadRequest(new { message = $"No se pudo calcular la sugerencia: {ex.Message}" });
             }
         }
         

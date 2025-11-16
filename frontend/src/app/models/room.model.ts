@@ -13,4 +13,8 @@ export interface PriceSuggestion {
   targetDate: string;
   suggestedPrice: number;
   currency: string;
+  basePriceUsed?: number;
+  avgOccupancy?: number;
+  hadHistory?: boolean;
+  priceSource?: string;
 }

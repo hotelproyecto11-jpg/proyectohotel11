@@ -41,6 +41,7 @@ export class DashboardComponent implements OnInit {
         this.rooms = rooms;
         this.isLoading = false;
         setTimeout(() => this.createChart(), 100);
+        // No solicitar sugerencias automáticamente: el usuario debe presionar "Sugerir precio"
       },
       error: (error) => {
         console.error('Error al cargar habitaciones:', error);

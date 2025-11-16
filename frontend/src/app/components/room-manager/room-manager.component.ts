@@ -16,6 +16,14 @@ export class RoomManagerComponent implements OnInit {
   isLoading = false;
   errorMessage = '';
   successMessage = '';
+  // Edit state
+  editingRoomId: number | null = null;
+  editModel: any = {
+    basePrice: 0,
+    capacity: 1,
+    hasBalcony: false,
+    hasSeaView: false
+  };
 
   // Formulario de creación
   showForm = false;
@@ -160,6 +168,60 @@ export class RoomManagerComponent implements OnInit {
       error: (err) => {
         console.error('Error al eliminar:', err);
         this.errorMessage = 'Error al eliminar habitación';
+      }
+    });
+  }
+
+  startEdit(room: any): void {
+    this.editingRoomId = room.id;
+    this.editModel = {
+      basePrice: room.basePrice,
+      capacity: room.capacity,
+      hasBalcony: room.hasBalcony ?? false,
+      hasSeaView: room.hasSeaView ?? false
+    };
+  }
+
+  cancelEdit(): void {
+    this.editingRoomId = null;
+    this.editModel = {
+      basePrice: 0,
+      capacity: 1,
+      hasBalcony: false,
+      hasSeaView: false
+    };
+  }
+
+  saveEdit(room: any): void {
+    // Basic validation
+    if (this.editModel.basePrice <= 0 || this.editModel.capacity <= 0) {
+      this.errorMessage = 'Precio base y capacidad deben ser mayores a 0';
+      return;
+    }
+
+    const payload = {
+      basePrice: this.editModel.basePrice,
+      capacity: this.editModel.capacity,
+      hasBalcony: this.editModel.hasBalcony,
+      hasSeaView: this.editModel.hasSeaView
+    };
+
+    this.roomService.updateRoom(room.id, payload).subscribe({
+      next: () => {
+        this.successMessage = 'Habitación actualizada';
+        // actualizar en la lista localmente para evitar recarga completa
+        const idx = this.rooms.findIndex(r => r.id === room.id);
+        if (idx !== -1) {
+          this.rooms[idx].basePrice = this.editModel.basePrice;
+          this.rooms[idx].capacity = this.editModel.capacity;
+          this.rooms[idx].hasBalcony = this.editModel.hasBalcony;
+          this.rooms[idx].hasSeaView = this.editModel.hasSeaView;
+        }
+        this.cancelEdit();
+      },
+      error: (err) => {
+        console.error('Error al actualizar habitación:', err);
+        this.errorMessage = 'Error al actualizar habitación';
       }
     });
   }
