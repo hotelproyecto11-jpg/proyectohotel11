@@ -1,0 +1,7 @@
+/* Estilos mínimos para Hotel Manager */
+input[type="text"], input[type="number"], select {
+  width: 100%;
+  padding: 6px;
+  box-sizing: border-box;
+}
+button { padding: 6px 10px; border: none; cursor: pointer; }

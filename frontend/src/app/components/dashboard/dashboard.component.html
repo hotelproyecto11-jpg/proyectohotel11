@@ -1,0 +1,166 @@
+<div class="container-fluid">
+  <!-- Header -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <i class="bi bi-graph-up-arrow"></i> Sistema de Pricing Inteligente
+      </a>
+      <div class="d-flex align-items-center">
+        <span class="text-white me-3">
+          <i class="bi bi-person-circle"></i> {{ currentUser?.fullName }}
+          <span class="badge bg-light text-primary ms-2">{{ currentUser?.role }}</span>
+        </span>
+        <button *ngIf="currentUser?.role === 'Admin'" class="btn btn-warning btn-sm me-2" (click)="gotoAdminPanel()">
+          <i class="bi bi-shield-lock"></i> Panel Admin
+        </button>
+        <button class="btn btn-outline-light btn-sm" (click)="logout()">
+          <i class="bi bi-box-arrow-right"></i> Salir
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-3">Cargando habitaciones...</p>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!isLoading">
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+      <div class="col-md-4">
+        <div class="card stat-card bg-primary text-white">
+          <div class="card-body">
+            <h6 class="card-subtitle mb-2">Total Habitaciones</h6>
+            <h2 class="card-title">{{ rooms.length }}</h2>
+            <small>Tipos configurados</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card stat-card bg-success text-white">
+          <div class="card-body">
+            <h6 class="card-subtitle mb-2">Precio Promedio</h6>
+            <h2 class="card-title">
+              ${{ getAveragePrice().toFixed(2) }}
+            </h2>
+            <small>MXN por noche</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card stat-card bg-info text-white">
+          <div class="card-body">
+            <h6 class="card-subtitle mb-2">Capacidad Total</h6>
+            <h2 class="card-title">
+              {{ getTotalCapacity() }}
+            </h2>
+            <small>Huéspedes</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div style="height: 400px;">
+              <canvas id="priceChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rooms Table -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+              <i class="bi bi-door-open"></i> Gestión de Habitaciones y Precios
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Tipo</th>
+                    <th>Hotel</th>
+                    <th>Capacidad</th>
+                    <th>Precio Base</th>
+                    <th>Precio Sugerido</th>
+                    <th>Diferencia</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let room of rooms">
+                    <td>
+                      <strong>{{ room.type }}</strong><br>
+                      <small class="text-muted">#{{ room.roomNumber }}</small>
+                    </td>
+                    <td>{{ room.hotelName }}</td>
+                    <td>
+                      <i class="bi bi-people"></i> {{ room.capacity }}
+                    </td>
+                    <td>
+                      <span class="badge bg-secondary">
+                        ${{ room.basePrice.toFixed(2) }} MXN
+                      </span>
+                    </td>
+                    <td>
+                      <span *ngIf="room.suggestedPrice" class="badge bg-success">
+                        ${{ room.suggestedPrice.toFixed(2) }} MXN
+                      </span>
+                      <span *ngIf="!room.suggestedPrice" class="text-muted">
+                        No calculado
+                      </span>
+                    </td>
+                    <td>
+                      <span *ngIf="room.suggestedPrice" 
+                            [class]="getDifference(room) >= 0 ? 'text-success' : 'text-danger'">
+                        {{ getDifference(room) >= 0 ? '+' : '' }}${{ getDifference(room).toFixed(2) }}
+                        ({{ getDifferencePercent(room).toFixed(1) }}%)
+                      </span>
+                    </td>
+                    <td>
+                      <button 
+                        class="btn btn-sm btn-outline-primary me-2"
+                        (click)="getSuggestedPrice(room)"
+                        [disabled]="loadingPrices[room.id]">
+                        <span *ngIf="loadingPrices[room.id]" 
+                              class="spinner-border spinner-border-sm me-1"></span>
+                        <i *ngIf="!loadingPrices[room.id]" class="bi bi-calculator"></i>
+                        {{ loadingPrices[room.id] ? 'Calculando...' : 'Sugerir Precio' }}
+                      </button>
+                      
+                      <button 
+                        *ngIf="canApplyPrices()"
+                        class="btn btn-sm btn-success"
+                        (click)="applyPrice(room)"
+                        [disabled]="!room.suggestedPrice">
+                        <i class="bi bi-check-circle"></i> Aplicar
+                      </button>
+                      
+                      <span *ngIf="!canApplyPrices()" class="text-muted small">
+                        Sin permisos
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

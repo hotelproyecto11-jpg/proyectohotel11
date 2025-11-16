@@ -174,3 +174,4 @@ C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Api\obj\Debug\net9.0\refint\Pric
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Api\obj\Debug\net9.0\PricingMvp.Api.pdb
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Api\obj\Debug\net9.0\PricingMvp.Api.genruntimeconfig.cache
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Api\obj\Debug\net9.0\ref\PricingMvp.Api.dll
+C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Api\obj\Debug\net9.0\PricingMvp.Api.sourcelink.json

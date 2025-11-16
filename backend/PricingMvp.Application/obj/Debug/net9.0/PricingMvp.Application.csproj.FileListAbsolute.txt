@@ -13,3 +13,4 @@ C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Application\obj\Debug\net9.0\Pri
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Application\obj\Debug\net9.0\refint\PricingMvp.Application.dll
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Application\obj\Debug\net9.0\PricingMvp.Application.pdb
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Application\obj\Debug\net9.0\ref\PricingMvp.Application.dll
+C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Application\obj\Debug\net9.0\PricingMvp.Application.sourcelink.json

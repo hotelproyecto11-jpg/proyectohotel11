@@ -1,0 +1,115 @@
+<div style="padding: 20px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h1>Panel de Administración</h1>
+    <div>
+      <button (click)="gotoDashboard()" style="margin-right: 10px;">Ir a Dashboard</button>
+      <button (click)="logout()">Cerrar Sesión</button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+    <button (click)="setTab('users')" [style.background]="activeTab==='users' ? '#1976d2' : '#e0e0e0'" [style.color]="activeTab==='users' ? 'white' : 'black'">Gestión de Usuarios</button>
+    <button (click)="setTab('rooms')" [style.background]="activeTab==='rooms' ? '#1976d2' : '#e0e0e0'" [style.color]="activeTab==='rooms' ? 'white' : 'black'">Gestión de Habitaciones</button>
+    <button (click)="setTab('hotels')" [style.background]="activeTab==='hotels' ? '#1976d2' : '#e0e0e0'" [style.color]="activeTab==='hotels' ? 'white' : 'black'">Gestión de Hoteles</button>
+  </div>
+
+  <div *ngIf="successMessage" style="color: green; padding: 10px; background: #e8f5e9; margin-bottom: 10px;">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" style="color: red; padding: 10px; background: #ffebee; margin-bottom: 10px;">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Usuarios Tab -->
+  <div *ngIf="activeTab==='users'">
+    <div *ngIf="isLoading" style="text-align: center; padding: 20px;">
+      Cargando usuarios...
+    </div>
+
+    <div *ngIf="!isLoading" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <!-- Lista de usuarios -->
+      <div style="border: 1px solid #ddd; padding: 15px; max-height: 600px; overflow-y: auto;">
+        <h3>Usuarios</h3>
+        <div *ngFor="let user of users"
+             (click)="selectUser(user)"
+             [style.background]="selectedUser?.id === user.id ? '#e3f2fd' : 'white'"
+             style="padding: 10px; margin: 5px 0; border: 1px solid #ccc; cursor: pointer;">
+          <strong>{{ user.fullName }}</strong><br>
+          {{ user.email }}<br>
+          <small>Rol: {{ user.role }} | Estado: {{ user.isActive ? 'Activo' : 'Inactivo' }}</small>
+        </div>
+      </div>
+
+      <!-- Detalles y edición -->
+      <div style="border: 1px solid #ddd; padding: 15px;">
+        <h3>Detalles del Usuario</h3>
+        <div *ngIf="!selectedUser" style="color: #999;">
+          Selecciona un usuario para ver detalles
+        </div>
+
+        <div *ngIf="selectedUser">
+          <div *ngIf="editingId !== selectedUser.id">
+            <!-- Vista de detalles -->
+            <div style="margin-bottom: 10px;">
+              <label><strong>Email:</strong></label>
+              <p>{{ selectedUser.email }}</p>
+            </div>
+            <div style="margin-bottom: 10px;">
+              <label><strong>Nombre completo:</strong></label>
+              <p>{{ selectedUser.fullName }}</p>
+            </div>
+            <div style="margin-bottom: 10px;">
+              <label><strong>Rol:</strong></label>
+              <p>{{ selectedUser.role }}</p>
+            </div>
+            <div style="margin-bottom: 10px;">
+              <label><strong>Estado:</strong></label>
+              <p>{{ selectedUser.isActive ? 'Activo' : 'Inactivo' }}</p>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+              <button (click)="startEdit(selectedUser)">Editar</button>
+              <button (click)="toggleActive(selectedUser)"
+                      [style.background]="selectedUser.isActive ? '#f44336' : '#4caf50'">
+                {{ selectedUser.isActive ? 'Desactivar' : 'Activar' }}
+              </button>
+              <button (click)="deleteUser(selectedUser)" style="background: #ff9800;">Eliminar</button>
+            </div>
+          </div>
+
+          <div *ngIf="editingId === selectedUser.id">
+            <!-- Formulario de edición -->
+            <div style="margin-bottom: 10px;">
+              <label>Email:</label>
+              <input type="email" [(ngModel)]="editForm.email" style="width: 100%; padding: 5px;" />
+            </div>
+            <div style="margin-bottom: 10px;">
+              <label>Nombre completo:</label>
+              <input type="text" [(ngModel)]="editForm.fullName" style="width: 100%; padding: 5px;" />
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+              <button (click)="saveEdit(selectedUser)" style="background: #4caf50;">Guardar</button>
+              <button (click)="cancelEdit()">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Habitaciones Tab -->
+  <div *ngIf="activeTab==='rooms'">
+    <div>
+      <app-room-manager></app-room-manager>
+    </div>
+  </div>
+
+  <!-- Hoteles Tab -->
+  <div *ngIf="activeTab==='hotels'">
+    <div>
+      <app-hotel-manager></app-hotel-manager>
+    </div>
+  </div>
+</div>

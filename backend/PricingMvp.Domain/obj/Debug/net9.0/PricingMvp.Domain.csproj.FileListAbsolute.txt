@@ -9,3 +9,4 @@ C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\PricingM
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\refint\PricingMvp.Domain.dll
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\PricingMvp.Domain.pdb
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\ref\PricingMvp.Domain.dll
+C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\PricingMvp.Domain.sourcelink.json

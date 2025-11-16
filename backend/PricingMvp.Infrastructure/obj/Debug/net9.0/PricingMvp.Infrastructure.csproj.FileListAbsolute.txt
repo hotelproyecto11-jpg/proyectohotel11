@@ -17,3 +17,4 @@ C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Infrastructure\obj\Debug\net9.0\
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Infrastructure\obj\Debug\net9.0\PricingMvp.Infrastructure.pdb
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Infrastructure\obj\Debug\net9.0\PricingMvp.Infrastructure.genruntimeconfig.cache
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Infrastructure\obj\Debug\net9.0\ref\PricingMvp.Infrastructure.dll
+C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Infrastructure\obj\Debug\net9.0\PricingMvp.Infrastructure.sourcelink.json

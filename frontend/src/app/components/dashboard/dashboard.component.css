@@ -1,0 +1,37 @@
+.navbar {
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.stat-card {
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,.1);
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.card {
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+.btn-outline-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+
+.badge {
+  padding: 6px 12px;
+  font-weight: 500;
+}
