@@ -52,24 +52,22 @@ namespace PricingMvp.Api.Controllers
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] PricingMvp.Application.DTOs.RegisterRequestDto request)
         {
-            // Validar existencia
+            // Validate model state (data annotations)
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // Only allow registrations with the corporate domain
+            var allowedDomain = "@posadas.com";
+            if (!request.Email.EndsWith(allowedDomain, StringComparison.OrdinalIgnoreCase))
+                return BadRequest(new { message = $"Solo se permiten registros con el dominio '{allowedDomain}'" });
+
+            // Check existing
             var existing = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
             if (existing != null)
                 return BadRequest(new { message = "Usuario ya existe" });
 
-            // Determinar rol solicitado
-            Domain.Enums.UserRole role = Domain.Enums.UserRole.StaffOperativo; // default
-            if (!string.IsNullOrWhiteSpace(request.Role))
-            {
-                if (Enum.TryParse<Domain.Enums.UserRole>(request.Role, out var parsed))
-                {
-                    // Rechazar intentos de registrarse como Admin
-                    if (parsed == Domain.Enums.UserRole.Admin)
-                        return BadRequest(new { message = "No se puede registrar como Admin" });
-                    
-                    role = parsed;
-                }
-            }
+            // Assign default role - Admin must assign others later
+            Domain.Enums.UserRole role = Domain.Enums.UserRole.StaffOperativo;
 
             var user = new Domain.Entities.User
             {

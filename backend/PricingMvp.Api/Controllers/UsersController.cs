@@ -113,11 +113,48 @@ namespace PricingMvp.Api.Controllers
 
             return Ok(new { message = "Usuario eliminado" });
         }
+
+        // PATCH: api/users/{id}/role
+        // Admin only: asignar rol a un usuario
+        [HttpPatch("{id}/role")]
+        public async Task<ActionResult> SetUserRole(int id, [FromBody] RoleAssignmentDto dto)
+        {
+            if (dto == null || string.IsNullOrWhiteSpace(dto.Role))
+                return BadRequest(new { message = "Role es requerido" });
+
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+                return NotFound(new { message = "Usuario no encontrado" });
+
+            if (!Enum.TryParse<PricingMvp.Domain.Enums.UserRole>(dto.Role, true, out var parsed))
+                return BadRequest(new { message = "Role inválido" });
+
+            // If demoting an Admin, ensure there is at least one other Admin remaining
+            if (user.Role == PricingMvp.Domain.Enums.UserRole.Admin && parsed != PricingMvp.Domain.Enums.UserRole.Admin)
+            {
+                var otherAdmins = await _context.Users
+                    .Where(u => u.Id != id && u.Role == PricingMvp.Domain.Enums.UserRole.Admin)
+                    .CountAsync();
+
+                if (otherAdmins == 0)
+                    return BadRequest(new { message = "No se puede demotar al último Admin" });
+            }
+
+            user.Role = parsed;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Role actualizado", role = user.Role.ToString() });
+        }
     }
 
     public class UpdateUserDto
     {
         public string? Email { get; set; }
         public string? FullName { get; set; }
+    }
+
+    public class RoleAssignmentDto
+    {
+        public string Role { get; set; } = string.Empty;
     }
 }
