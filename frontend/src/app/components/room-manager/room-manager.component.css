@@ -1,37 +1,51 @@
-/* Room Manager Styles */
-button {
-  padding: 8px 12px;
-  background: #2196F3;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
+/* Room Manager Styles - theme aligned */
+.btn { padding: 10px 14px; border-radius: 10px; }
+.btn-primary { background: linear-gradient(90deg,var(--btn-bg1),var(--btn-bg2)); color: white; box-shadow: var(--shadow-soft) }
+
+.input, select { border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; padding: 12px 14px; font-size: 15px; width:100%; box-sizing:border-box; background: rgba(255,255,255,0.03); color: var(--text) }
+
+label { display:block; margin-bottom:6px; font-weight:700; color:var(--muted) }
+
+.data-table { font-size: 14px; width:100%; border-collapse:collapse; color: var(--text) }
+.data-table th { background: rgba(255,255,255,0.02); padding:12px; text-transform:uppercase; color:var(--muted); font-weight:700 }
+.data-table td { padding:12px; border-top:1px solid rgba(255,255,255,0.02); }
+.data-table tr:nth-child(odd) { background: rgba(255,255,255,0.01) }
+
+/* Override inline light backgrounds (e.g. style="background: #f0f0f0" on thead rows) */
+.room-manager .data-table thead tr,
+.room-manager .data-table thead tr[style*="background"] {
+	background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)) !important;
 }
 
-button:hover {
-  opacity: 0.9;
+/* Force table header cells to the dark theme even if html uses inline borders/backgrounds */
+.room-manager .data-table th,
+.room-manager .data-table th[style*="border"] {
+	background: rgba(255,255,255,0.02) !important;
+	color: var(--muted) !important;
+	border: 1px solid rgba(255,255,255,0.03) !important;
 }
 
-input, select {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 6px;
-  font-size: 14px;
-  width: 100%;
-  box-sizing: border-box;
+/* Ensure table rows use themed background instead of white */
+.room-manager .data-table tr[style*="background: #fff"],
+.room-manager .data-table tr[style*="background: white"],
+.room-manager .data-table tr[style*="background: #f0f0f0"] {
+	background: transparent !important;
+	color: var(--text) !important;
 }
 
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
+/* Override inline success / error message boxes to use subtle themed tints */
+.room-manager [style*="background: #e8f5e9"] {
+	background: rgba(16,185,129,0.08) !important;
+	color: #bbf7d0 !important;
+	border-radius: 6px !important;
+	padding: 10px !important;
+}
+.room-manager [style*="background: #ffebee"] {
+	background: rgba(239,68,68,0.08) !important;
+	color: #ffd6d6 !important;
+	border-radius: 6px !important;
+	padding: 10px !important;
 }
 
-table {
-  font-size: 14px;
-}
-
-th, td {
-  text-align: left;
-}
+/* Ensure action buttons beside table are visible */
+.data-table .action-btn { background: #ef4444; color: white; border-radius: 8px; padding: 8px 12px; box-shadow: var(--shadow-soft) }

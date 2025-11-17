@@ -1,9 +1,78 @@
-/* Minimal styles for register form */
-input, select {
-  width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
+/* Register component — mimic login design (scoped to .auth-page) */
+.auth-page {
+	--login-bg1: #051023;
+	--login-bg2: #071628;
+	--card-bg: rgba(8,12,22,0.92);
+	--btn-bg1: #06b6d4;
+	--btn-bg2: #7c3aed;
+	--muted: rgba(170,185,200,0.72);
+	--text: #ffffff;
 }
-button {
-  padding: 8px 12px;
+
+.auth-page {
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 2rem;
+	background-color: var(--login-bg2);
+	background-image: radial-gradient(600px 400px at 10% 10%, rgba(59,130,246,0.06), transparent 15%), linear-gradient(180deg, var(--login-bg1), var(--login-bg2));
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: cover;
 }
+
+.auth-page::before {
+	content: "";
+	position: absolute;
+	left: -10%;
+	top: -20%;
+	width: 140%;
+	height: 140%;
+	background: conic-gradient(from 120deg, rgba(59,130,246,0.10), rgba(110,231,183,0.06), rgba(99,102,241,0.09));
+	filter: blur(64px) saturate(120%);
+	transform: rotate(18deg);
+	pointer-events: none;
+}
+
+.auth-card {
+	position: relative;
+	z-index: 2;
+	width: 540px;
+	max-width: 94%;
+	padding: 40px;
+	border-radius: 18px;
+	background: linear-gradient(180deg, rgba(8,12,24,0.94), rgba(6,10,20,0.90));
+	border: 1px solid rgba(255,255,255,0.04);
+	box-shadow: 0 24px 70px rgba(2,6,23,0.72), 0 8px 26px rgba(3,7,20,0.6) inset;
+	backdrop-filter: blur(6px) saturate(120%);
+	transition: transform .22s cubic-bezier(.2,.9,.3,1), box-shadow .22s;
+	transform-origin: center;
+	animation: pop .36s cubic-bezier(.2,.9,.3,1);
+}
+
+.auth-card h2 { font-size: 28px; margin: 0 0 14px; color: #f7fbff; font-weight: 800; letter-spacing: 0.3px; }
+
+.auth-form { display: flex; flex-direction: column; gap: 14px; margin-top: 12px; }
+.form-row { display: flex; flex-direction: column; gap: 10px; }
+
+.input { width: 100%; padding: 16px 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.04); background: rgba(255,255,255,0.03); color: #ffffff; font-size: 16px; font-weight: 600; outline: none; transition: box-shadow .16s, border-color .16s, transform .16s; }
+.input::placeholder { color: rgba(255,255,255,0.45); font-weight: 500; }
+.input:focus { border-color: rgba(59,130,246,0.98); box-shadow: 0 8px 28px rgba(59,130,246,0.18); transform: translateY(-1px); }
+
+.btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 22px; border-radius: 14px; border: none; cursor: pointer; color: white; font-weight: 800; font-size: 16px; background: linear-gradient(90deg,var(--btn-bg1), var(--btn-bg2)); box-shadow: 0 22px 58px rgba(59,130,246,0.28), 0 8px 22px rgba(7,12,24,0.6) inset; transition: transform .12s, box-shadow .12s, opacity .12s; }
+.btn-primary:hover { transform: translateY(-4px); }
+
+.error-message { color: var(--danger, #ff6b6b); margin-top: 8px; font-weight: 600; background: rgba(255,107,107,0.06); padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,107,107,0.10); }
+
+@keyframes pop { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+@media (max-width: 480px) {
+	.auth-card { padding: 20px; border-radius: 12px; }
+	.auth-card h2 { font-size: 20px; }
+	.input { padding: 12px; }
+	.btn-primary { width: 100%; }
+}
+
+/* keep minor spacing rule for compatibility */
+.auth-card .muted { margin-top: 10px; }

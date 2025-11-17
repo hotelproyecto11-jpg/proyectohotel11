@@ -1,97 +1,125 @@
-<div style="padding: 20px;">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-    <h1>Panel de Administración</h1>
-    <div>
-      <button (click)="gotoDashboard()" style="margin-right: 10px;">Ir a Dashboard</button>
-      <button (click)="logout()">Cerrar Sesión</button>
+<div class="admin-page container">
+  <div class="admin-header">
+    <h1 class="section-title">Panel de Administración</h1>
+    <div class="admin-header-actions">
+      <button class="btn btn-ghost" (click)="gotoDashboard()">Ir a Dashboard</button>
+      <button class="btn btn-ghost" (click)="logout()">Cerrar Sesión</button>
     </div>
   </div>
 
   <!-- Tabs -->
-  <div style="display: flex; gap: 8px; margin-bottom: 16px;">
-    <button (click)="setTab('users')" [style.background]="activeTab==='users' ? '#1976d2' : '#e0e0e0'" [style.color]="activeTab==='users' ? 'white' : 'black'">Gestión de Usuarios</button>
-    <button (click)="setTab('rooms')" [style.background]="activeTab==='rooms' ? '#1976d2' : '#e0e0e0'" [style.color]="activeTab==='rooms' ? 'white' : 'black'">Gestión de Habitaciones</button>
-    <button (click)="setTab('hotels')" [style.background]="activeTab==='hotels' ? '#1976d2' : '#e0e0e0'" [style.color]="activeTab==='hotels' ? 'white' : 'black'">Gestión de Hoteles</button>
+  <div class="tabs-bar">
+    <div class="tabs">
+      <button class="tab" (click)="setTab('users')" [class.active]="activeTab==='users'">Gestión de Usuarios</button>
+      <button class="tab" (click)="setTab('rooms')" [class.active]="activeTab==='rooms'">Gestión de Habitaciones</button>
+      <button class="tab" (click)="setTab('hotels')" [class.active]="activeTab==='hotels'">Gestión de Hoteles</button>
+    </div>
   </div>
 
-  <div *ngIf="successMessage" style="color: green; padding: 10px; background: #e8f5e9; margin-bottom: 10px;">
-    {{ successMessage }}
-  </div>
-  <div *ngIf="errorMessage" style="color: red; padding: 10px; background: #ffebee; margin-bottom: 10px;">
-    {{ errorMessage }}
-  </div>
+  <div *ngIf="successMessage" class="alert success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="alert error">{{ errorMessage }}</div>
 
   <!-- Usuarios Tab -->
   <div *ngIf="activeTab==='users'">
-    <div *ngIf="isLoading" style="text-align: center; padding: 20px;">
-      Cargando usuarios...
-    </div>
+    <div *ngIf="isLoading" class="loading-placeholder">Cargando usuarios...</div>
 
-    <div *ngIf="!isLoading" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+    <div *ngIf="!isLoading" class="grid-2">
       <!-- Lista de usuarios -->
-      <div style="border: 1px solid #ddd; padding: 15px; max-height: 600px; overflow-y: auto;">
-        <h3>Usuarios</h3>
+      <div class="card card-scroll">
+        <h3 class="section-sub">Usuarios</h3>
         <div *ngFor="let user of users"
              (click)="selectUser(user)"
-             [style.background]="selectedUser?.id === user.id ? '#e3f2fd' : 'white'"
-             style="padding: 10px; margin: 5px 0; border: 1px solid #ccc; cursor: pointer;">
+             [ngClass]="{'user-list-item': true, 'selected': selectedUser?.id === user.id}">
           <strong>{{ user.fullName }}</strong><br>
-          {{ user.email }}<br>
-          <small>Rol: {{ user.role }} | Estado: {{ user.isActive ? 'Activo' : 'Inactivo' }}</small>
+          <span class="muted">{{ user.email }}</span><br>
+          <small class="muted">Rol: {{ user.role }} | Estado: {{ user.isActive ? 'Activo' : 'Inactivo' }}</small>
         </div>
       </div>
 
       <!-- Detalles y edición -->
-      <div style="border: 1px solid #ddd; padding: 15px;">
-        <h3>Detalles del Usuario</h3>
-        <div *ngIf="!selectedUser" style="color: #999;">
+      <div class="card">
+        <h3 class="section-sub">Detalles del Usuario</h3>
+        <div *ngIf="!selectedUser" class="muted">
           Selecciona un usuario para ver detalles
+          <div style="margin-top:12px">
+            <button class="btn btn-primary" (click)="toggleCreateForm()">+ Crear Usuario</button>
+          </div>
+        </div>
+
+        <div *ngIf="showCreateForm" class="spaced-block">
+          <h4>Crear Usuario</h4>
+          <div class="spaced-block">
+            <label>Email:</label>
+            <input type="email" [(ngModel)]="createForm.email" class="form-control" />
+          </div>
+          <div class="spaced-block">
+            <label>Nombre completo:</label>
+            <input type="text" [(ngModel)]="createForm.fullName" class="form-control" />
+          </div>
+          <div class="spaced-block">
+            <label>Contraseña:</label>
+            <input type="password" [(ngModel)]="createForm.password" class="form-control" />
+          </div>
+          <div class="spaced-block">
+            <label>Rol:</label>
+            <select [(ngModel)]="createForm.role" class="form-control">
+              <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+            </select>
+          </div>
+          <div class="action-row">
+            <button class="btn btn-primary" (click)="createUser()">Crear</button>
+            <button class="btn btn-ghost" (click)="toggleCreateForm()">Cancelar</button>
+          </div>
         </div>
 
         <div *ngIf="selectedUser">
           <div *ngIf="editingId !== selectedUser.id">
             <!-- Vista de detalles -->
-            <div style="margin-bottom: 10px;">
+            <div class="spaced-block">
               <label><strong>Email:</strong></label>
               <p>{{ selectedUser.email }}</p>
             </div>
-            <div style="margin-bottom: 10px;">
+            <div class="spaced-block">
               <label><strong>Nombre completo:</strong></label>
               <p>{{ selectedUser.fullName }}</p>
             </div>
-            <div style="margin-bottom: 10px;">
+            <div class="spaced-block">
               <label><strong>Rol:</strong></label>
               <p>{{ selectedUser.role }}</p>
             </div>
-            <div style="margin-bottom: 10px;">
+            <div class="spaced-block">
               <label><strong>Estado:</strong></label>
               <p>{{ selectedUser.isActive ? 'Activo' : 'Inactivo' }}</p>
             </div>
 
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-              <button (click)="startEdit(selectedUser)">Editar</button>
-              <button (click)="toggleActive(selectedUser)"
-                      [style.background]="selectedUser.isActive ? '#f44336' : '#4caf50'">
+            <div class="action-row">
+              <button class="btn btn-ghost" (click)="startEdit(selectedUser)">Editar</button>
+              <button class="btn" (click)="toggleActive(selectedUser)" [ngClass]="selectedUser.isActive ? 'btn-danger' : 'btn-success'">
                 {{ selectedUser.isActive ? 'Desactivar' : 'Activar' }}
               </button>
-              <button (click)="deleteUser(selectedUser)" style="background: #ff9800;">Eliminar</button>
+              <button class="btn btn-danger" (click)="deleteUser(selectedUser)">Eliminar</button>
             </div>
           </div>
 
-          <div *ngIf="editingId === selectedUser.id">
+            <div *ngIf="editingId === selectedUser.id">
             <!-- Formulario de edición -->
-            <div style="margin-bottom: 10px;">
+            <div class="spaced-block">
               <label>Email:</label>
-              <input type="email" [(ngModel)]="editForm.email" style="width: 100%; padding: 5px;" />
+              <input name="editEmail" type="email" [(ngModel)]="editForm.email" class="form-control" />
             </div>
-            <div style="margin-bottom: 10px;">
+            <div class="spaced-block">
               <label>Nombre completo:</label>
-              <input type="text" [(ngModel)]="editForm.fullName" style="width: 100%; padding: 5px;" />
+              <input name="editFullName" type="text" [(ngModel)]="editForm.fullName" class="form-control" />
             </div>
-
-            <div style="display: flex; gap: 10px; margin-top: 15px;">
-              <button (click)="saveEdit(selectedUser)" style="background: #4caf50;">Guardar</button>
-              <button (click)="cancelEdit()">Cancelar</button>
+            <div class="spaced-block">
+              <label>Rol:</label>
+              <select name="editRole" [(ngModel)]="editForm.role" class="form-control">
+                <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+              </select>
+            </div>
+            <div class="action-row">
+              <button class="btn btn-success" (click)="saveEdit(selectedUser)">Guardar</button>
+              <button class="btn btn-ghost" (click)="cancelEdit()">Cancelar</button>
             </div>
           </div>
         </div>

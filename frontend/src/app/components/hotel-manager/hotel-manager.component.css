@@ -1,7 +1,13 @@
-/* Estilos mínimos para Hotel Manager */
-input[type="text"], input[type="number"], select {
-  width: 100%;
-  padding: 6px;
-  box-sizing: border-box;
-}
-button { padding: 6px 10px; border: none; cursor: pointer; }
+/* Hotel Manager styles using global theme */
+.input { width:100%; padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,0.04); box-sizing:border-box; background: rgba(255,255,255,0.03); color:var(--text) }
+.btn { padding:10px 14px; border-radius:10px }
+.btn-primary { background: linear-gradient(90deg,var(--btn-bg1),var(--btn-bg2)); color:white; box-shadow:var(--shadow-soft) }
+.muted { color:var(--muted) }
+.hotel-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.02) }
+
+/* Tables and lists inside hotels panel */
+.hotel-list, .hotel-list ul { width:100%; }
+.hotel-list li { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.02); color: var(--text); }
+.hotel-list li:nth-child(odd) { background: rgba(255,255,255,0.01); }
+
+.hotel-form { background: rgba(8,12,24,0.98); padding: 18px; border-radius: 10px; box-shadow: 0 12px 40px rgba(2,6,23,0.35) }

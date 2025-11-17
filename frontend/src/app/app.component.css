@@ -1,0 +1,18 @@
+/* App shell styles reuse global theme variables from styles.css */
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial}
+body{background: linear-gradient(180deg,var(--login-bg1),var(--login-bg2));color:var(--text-dark)}
+.app-shell{display:flex;flex-direction:column;min-height:100vh}
+.topbar{height:72px;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;align-items:center;justify-content:space-between;padding:12px 24px;border-bottom:1px solid rgba(0,0,0,0.04);box-shadow:var(--shadow-soft)}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{height:44px;width:44px;object-fit:contain;border-radius:8px}
+.brand-text h1{margin:0;font-size:18px;color:var(--text-dark)}
+.brand-text small{color:var(--muted)}
+.app-content{flex:1;padding:24px;max-width:1200px;margin:0 auto;width:100%}
+.app-footer{height:48px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px}
+
+.card{background:linear-gradient(180deg, rgba(8,12,24,0.92), rgba(6,10,20,0.88));border-radius:var(--radius);box-shadow:var(--shadow-soft);padding:18px;color:var(--text)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:8px;border:none;cursor:pointer}
+.btn-primary{background:linear-gradient(90deg,var(--btn-bg1),var(--btn-bg2));color:white;box-shadow:var(--shadow-strong)}
+.btn-accent{background:var(--color-accent);color:var(--text-dark)}
+.input{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);width:100%;background:rgba(255,255,255,0.03);color:var(--text)}

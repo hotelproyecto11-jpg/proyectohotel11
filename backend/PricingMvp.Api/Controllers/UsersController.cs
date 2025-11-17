@@ -27,7 +27,7 @@ namespace PricingMvp.Api.Controllers
                     u.Id,
                     u.Email,
                     u.FullName,
-                    u.Role,
+                    Role = u.Role.ToString(),
                     u.IsActive,
                     CreatedAt = u.CreatedAt
                 })
@@ -47,7 +47,7 @@ namespace PricingMvp.Api.Controllers
                     u.Id,
                     u.Email,
                     u.FullName,
-                    u.Role,
+                    Role = u.Role.ToString(),
                     u.IsActive,
                     CreatedAt = u.CreatedAt
                 })
@@ -145,6 +145,44 @@ namespace PricingMvp.Api.Controllers
 
             return Ok(new { message = "Role actualizado", role = user.Role.ToString() });
         }
+
+        // POST: api/users
+        // Admin only: crear usuario (con role asignado)
+        [HttpPost]
+        public async Task<ActionResult> CreateUser([FromBody] AdminCreateUserDto dto)
+        {
+            if (dto == null)
+                return BadRequest(new { message = "Payload inválido" });
+
+            if (string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.Password) || string.IsNullOrWhiteSpace(dto.FullName) || string.IsNullOrWhiteSpace(dto.Role))
+                return BadRequest(new { message = "Email, Password, FullName y Role son requeridos" });
+
+            // Optional: keep same domain restriction as public register
+            var allowedDomain = "@posadas.com";
+            if (!dto.Email.EndsWith(allowedDomain, StringComparison.OrdinalIgnoreCase))
+                return BadRequest(new { message = $"Solo se permiten registros con el dominio '{allowedDomain}'" });
+
+            var exists = await _context.Users.AnyAsync(u => u.Email == dto.Email);
+            if (exists)
+                return BadRequest(new { message = "Usuario ya existe" });
+
+            if (!Enum.TryParse<PricingMvp.Domain.Enums.UserRole>(dto.Role, true, out var parsed))
+                return BadRequest(new { message = "Role inválido" });
+
+            var user = new Domain.Entities.User
+            {
+                Email = dto.Email,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                FullName = dto.FullName,
+                Role = parsed,
+                IsActive = true
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Usuario creado", email = user.Email, role = user.Role.ToString() });
+        }
     }
 
     public class UpdateUserDto
@@ -155,6 +193,14 @@ namespace PricingMvp.Api.Controllers
 
     public class RoleAssignmentDto
     {
+        public string Role { get; set; } = string.Empty;
+    }
+
+    public class AdminCreateUserDto
+    {
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string FullName { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
     }
 }

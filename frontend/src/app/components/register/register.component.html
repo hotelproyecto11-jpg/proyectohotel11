@@ -1,27 +1,23 @@
-<div style="padding:20px; max-width:420px; margin:40px auto;">
-  <h2>Registro de usuario</h2>
+<div class="auth-page">
+  <div class="auth-card card container" style="max-width:480px;margin:40px auto;">
+    <h2>Registro de usuario</h2>
 
-  <form (ngSubmit)="onSubmit()">
-    <div style="margin:10px 0;">
-      <input type="text" [(ngModel)]="fullName" name="fullName" placeholder="Nombre completo" required />
-    </div>
-    <div style="margin:10px 0;">
-      <input type="email" [(ngModel)]="email" name="email" placeholder="Email" required />
-    </div>
-    <div style="margin:10px 0;">
-      <input type="password" [(ngModel)]="password" name="password" placeholder="Contraseña" required />
-    </div>
-    <div style="margin:10px 0;">
-      <label>Rol (por defecto: Staff Operativo)</label>
-      <select [(ngModel)]="role" name="role">
-        <option *ngFor="let r of roles" [value]="r.value">{{ r.label }}</option>
-      </select>
-    </div>
+    <form (ngSubmit)="onSubmit()" class="auth-form">
+      <div class="form-row">
+        <input class="input" type="text" [(ngModel)]="fullName" name="fullName" placeholder="Nombre completo" required />
+      </div>
+      <div class="form-row">
+        <input class="input" type="email" [(ngModel)]="email" name="email" placeholder="Email" required />
+      </div>
+      <div class="form-row">
+        <input class="input" type="password" [(ngModel)]="password" name="password" placeholder="Contraseña" required />
+      </div>
 
-    <div style="margin-top:15px;">
-      <button type="submit">Registrar</button>
-    </div>
+      <div class="form-row" style="text-align:right;">
+        <button class="btn btn-primary" type="submit">Registrar</button>
+      </div>
 
-    <div *ngIf="errorMessage" style="color:red; margin-top:10px;">{{ errorMessage }}</div>
-  </form>
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+    </form>
+  </div>
 </div>

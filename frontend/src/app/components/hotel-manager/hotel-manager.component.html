@@ -1,59 +1,55 @@
-<div style="border: 1px solid #ddd; padding: 12px; margin-bottom: 12px; background: #fafafa;">
+<div class="card" style="padding:12px;margin-bottom:12px;">
   <h3>Gestión de Hoteles</h3>
 
-  <div *ngIf="successMessage" style="color: green; padding: 8px; background: #e8f5e9; margin-bottom: 8px;">
-    {{ successMessage }}
-  </div>
-  <div *ngIf="errorMessage" style="color: red; padding: 8px; background: #ffebee; margin-bottom: 8px;">
-    {{ errorMessage }}
-  </div>
+  <div *ngIf="successMessage" class="success-box">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="error-box">{{ errorMessage }}</div>
 
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+  <div class="grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
     <div>
       <label>Nombre *</label>
-      <input type="text" [(ngModel)]="newHotel.name" placeholder="Ej: Hotel Paradise" />
+      <input class="input" type="text" [(ngModel)]="newHotel.name" placeholder="Ej: Hotel Paradise" />
     </div>
     <div>
       <label>Ciudad *</label>
-      <input type="text" [(ngModel)]="newHotel.city" />
+      <input class="input" type="text" [(ngModel)]="newHotel.city" />
     </div>
     <div>
       <label>Estado</label>
-      <input type="text" [(ngModel)]="newHotel.state" />
+      <input class="input" type="text" [(ngModel)]="newHotel.state" />
     </div>
     <div>
       <label>Dirección</label>
-      <input type="text" [(ngModel)]="newHotel.address" />
+      <input class="input" type="text" [(ngModel)]="newHotel.address" />
     </div>
     <div>
       <label>Estrellas</label>
-      <input type="number" [(ngModel)]="newHotel.stars" min="1" max="5" />
+      <input class="input" type="number" [(ngModel)]="newHotel.stars" min="1" max="5" />
     </div>
     <div>
       <label>Descripción</label>
-      <input type="text" [(ngModel)]="newHotel.description" />
+      <input class="input" type="text" [(ngModel)]="newHotel.description" />
     </div>
   </div>
 
-  <div style="margin-top: 10px; display:flex; gap:8px;">
-      <button *ngIf="!editingId" (click)="saveHotel()" [disabled]="isSaving" style="background:#1976d2; color:white;">Guardar Hotel</button>
-      <button *ngIf="editingId" (click)="saveEdit()" [disabled]="isSaving" style="background:#1976d2; color:white;">Guardar Cambios</button>
-      <button (click)="cancelEdit()">Cancelar</button>
+  <div class="form-actions" style="margin-top:10px;display:flex;gap:8px;">
+      <button class="btn btn-primary" *ngIf="!editingId" (click)="saveHotel()" [disabled]="isSaving">Guardar Hotel</button>
+      <button class="btn btn-primary" *ngIf="editingId" (click)="saveEdit()" [disabled]="isSaving">Guardar Cambios</button>
+      <button class="btn" (click)="cancelEdit()">Cancelar</button>
   </div>
 </div>
 
   <!-- Lista de hoteles existentes -->
-  <div style="border:1px solid #ddd; padding:12px; margin-top:12px; background:#fff;">
+  <div class="card" style="padding:12px;margin-top:12px;">
     <h4>Hoteles</h4>
-    <div *ngIf="hotels.length===0" style="color:#777;">No hay hoteles registrados.</div>
-    <div *ngFor="let h of hotels" style="display:flex; justify-content:space-between; align-items:center; padding:8px; border-bottom:1px solid #eee;">
+    <div *ngIf="hotels.length===0" class="muted">No hay hoteles registrados.</div>
+    <div *ngFor="let h of hotels" class="hotel-row" style="display:flex;justify-content:space-between;align-items:center;padding:8px;border-bottom:1px solid #eee;">
       <div>
-        <strong>{{ h.name }}</strong> <small style="color:#666;">- {{ h.city }} ({{ h.stars }}★)</small>
-        <div style="color:#444;">{{ h.address }}</div>
+        <strong>{{ h.name }}</strong> <small class="muted">- {{ h.city }} ({{ h.stars }}★)</small>
+        <div class="muted">{{ h.address }}</div>
       </div>
-      <div style="display:flex; gap:8px;">
-        <button (click)="selectHotelForEdit(h)">Editar</button>
-        <button (click)="deleteHotel(h)" style="background:#f44336; color:white;">Eliminar</button>
+      <div class="hotel-actions" style="display:flex;gap:8px;">
+        <button class="btn" (click)="selectHotelForEdit(h)">Editar</button>
+        <button class="btn" (click)="deleteHotel(h)" style="background:#f44336;color:white;">Eliminar</button>
       </div>
     </div>
   </div>

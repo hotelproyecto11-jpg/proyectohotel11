@@ -1,37 +1,96 @@
-.navbar {
-  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+.navbar { box-shadow: 0 2px 8px rgba(2,6,23,0.08); }
+
+/* Make the dashboard component full-bleed and use the dark theme similar to login/admin */
+:host {
+  display: block;
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, var(--bg1, rgba(8,12,24,0.96)), var(--bg2, rgba(6,10,20,0.94)));
+  color: var(--text-on-dark, #eef6ff);
+  padding: 18px 0;
 }
 
-.stat-card {
-  border: none;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0,0,0,.1);
-  transition: transform 0.3s ease;
+/* Ensure the inner container stretches across the full width of the page */
+:host .container-fluid { width: 100%; max-width: none; padding: 0 22px; }
+
+/* Override bootstrap light navbar/bg-primary to our dark gradient */
+:host .navbar.bg-primary, :host .card-header.bg-primary {
+  background: linear-gradient(90deg, var(--btn-bg1, #06b6d4), var(--btn-bg2, #7c3aed)) !important;
+  color: white !important;
 }
 
-.stat-card:hover {
-  transform: translateY(-5px);
+/* Make badges and inline elements visible on dark navbar */
+:host .navbar .badge.bg-light { background: rgba(255,255,255,0.08) !important; color: var(--text-on-dark) !important; }
+
+/* Ensure muted text reads on dark backgrounds */
+:host .text-muted, :host .text-muted small { color: var(--muted-on-dark, rgba(170,185,200,0.62)) !important; }
+
+/* Ensure card headers and bodies follow the dark card look */
+:host .card { background: var(--card-bg, rgba(8,12,24,0.96)); color: var(--text-on-dark, #eef6ff); box-shadow: var(--shadow-md, 0 12px 40px rgba(2,6,23,0.12)); }
+:host .card .card-body { background: transparent; }
+
+
+.stat-card { border: none; border-radius: 12px; box-shadow: var(--shadow-soft); transition: transform 0.22s cubic-bezier(.2,.9,.3,1); }
+.stat-card:hover { transform: translateY(-6px); }
+
+.stat-card.bg-primary { background: linear-gradient(90deg,var(--btn-bg1),var(--btn-bg2)); color: white; }
+.stat-card.bg-success { background: linear-gradient(90deg,#10B981,#059669); color: white; }
+.stat-card.bg-info { background: linear-gradient(90deg,var(--btn-bg1),var(--btn-bg2)); color: white; }
+
+.card { border-radius: 12px; box-shadow: var(--shadow-soft); background: linear-gradient(180deg, rgba(8,12,24,0.92), rgba(6,10,20,0.88)); color: var(--text); }
+
+.table th { background-color: rgba(255,255,255,0.02); font-weight: 700; text-transform: uppercase; font-size: 0.85rem; color: var(--muted); }
+
+.btn-outline-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(7,12,24,0.12); }
+
+.badge { padding: 6px 10px; font-weight: 600; border-radius: 6px; }
+
+/* Table and row contrast adjustments */
+.table, .table-responsive .table { background: transparent; color: var(--text); }
+.table tbody tr { background: transparent; border-bottom: 1px solid rgba(255,255,255,0.03); }
+.table td { color: var(--text); vertical-align: middle; }
+.table-hover tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+/* Badges and buttons inside table */
+.badge.bg-secondary { background: rgba(255,255,255,0.06); color: var(--text); padding: 6px 10px; border-radius: 6px; }
+.badge.bg-success { background: linear-gradient(90deg,#10B981,#059669); color: white; }
+
+/* Make the 'Sugerir Precio' outline button visible on dark rows */
+.btn-outline-primary { border: 1px solid rgba(255,255,255,0.08); color: var(--text); background: rgba(255,255,255,0.02); }
+.btn-outline-primary:hover { background: linear-gradient(90deg,var(--btn-bg1),var(--btn-bg2)); color: white; border-color: transparent; box-shadow: var(--shadow-strong); }
+
+/* Ensure apply button is clear */
+.btn-success { background: linear-gradient(90deg,#10B981,#059669); color: white; box-shadow: 0 8px 24px rgba(16,185,129,0.12); border: none; }
+
+/* Make small muted text readable on dark */
+.text-muted { color: var(--muted); }
+
+/* Ensure the chart canvas area is visible even when cards are dark.
+   We style the canvas directly (not the card) so charts render on a clear surface. */
+#priceChart, .chart-surface, .card .card-body canvas#priceChart {
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,250,250,0.98));
+  border-radius: 8px;
+  box-shadow: 0 8px 30px rgba(2,6,23,0.06);
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
-.card {
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,.1);
+/* If the chart container div has a fixed height, ensure the canvas fills it */
+.card .card-body > div { background: transparent; }
+
+/* Fix: ensure card-body that contains tables is transparent (prevents Bootstrap .card-body white bg) */
+.card .card-body { background: transparent; padding: 0.75rem 1rem; }
+
+/* Force table body cells to inherit card background instead of white */
+.table.table-hover, .table.table-hover tbody, .table.table-hover tbody tr, .table.table-hover tbody td {
+  background: transparent;
+  color: var(--text);
 }
 
-.table th {
-  background-color: #f8f9fa;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0.85rem;
-  letter-spacing: 0.5px;
-}
-
-.btn-outline-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
-}
-
-.badge {
-  padding: 6px 12px;
-  font-weight: 500;
+/* Responsive chart container */
+@media (max-width: 768px) {
+  .card .card-body { padding: 12px; }
+  #priceChart { height: 260px; }
 }

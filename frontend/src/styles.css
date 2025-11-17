@@ -1,1 +1,121 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+@import './app/app.component.css';
+@import './theme.css';
+
+/* Global variables and base styles for the app theme (aligned with login palette)
+   - purpose: keep a friendly, slightly darkened card on light gradient background
+   - not too dark: cards use deep bluish-gray with softened opacity for readability */
+:root{
+	--color-primary: #0B5A5A;
+	--color-accent: #FFB400;
+	--bg: #f4f7fb; /* very light background */
+	--login-bg1: #e9f0f6; /* used for subtle gradients */
+	--login-bg2: #f4f7fb;
+	--card-bg: rgba(8,12,24,0.88); /* slightly dark card used across app */
+	--card-bg-light: rgba(255,255,255,0.98); /* fallback for tables/print */
+	--text: #eef6ff; /* text on dark cards */
+	--text-dark: #071024; /* text for light inputs when needed */
+	--muted: rgba(200,210,220,0.78);
+	--radius: 12px;
+	--shadow-soft: 0 6px 18px rgba(2,6,23,0.08);
+	--shadow-strong: 0 24px 70px rgba(2,6,23,0.18);
+	--btn-bg1: #06b6d4;
+	--btn-bg2: #7c3aed;
+	--danger: #ff6b6b;
+}
+
+html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial}
+body{background: linear-gradient(180deg,var(--login-bg1),var(--login-bg2));color:var(--text-dark);-webkit-font-smoothing:antialiased}
+
+/* Utility helpers */
+.container{max-width:1200px;margin:0 auto;padding:0 16px}
+
+/* Import component-level styles moved to top to satisfy CSS @import ordering rules */
+
+/* Auth pages */
+.auth-page{display:flex;align-items:center;justify-content:center;padding:40px 16px}
+.auth-card{max-width:480px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:24px;border-radius:12px;box-shadow:var(--shadow-soft)}
+.auth-form .form-row{margin:12px 0}
+.muted{color:var(--muted)}
+.link{color:var(--btn-bg2);text-decoration:none;font-weight:700}
+.error-message{color:var(--danger);margin-top:8px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:1px solid transparent;background:transparent;color:var(--text);cursor:pointer}
+.btn-primary{background:linear-gradient(90deg,var(--btn-bg1),var(--btn-bg2));color:white;border:none;box-shadow:var(--shadow-strong)}
+.btn-accent{background:var(--color-accent);color:var(--text-dark)}
+.btn:disabled{opacity:0.6;cursor:not-allowed}
+
+/* Input / form elements global styling to match card design */
+input[type="text"],input[type="email"],input[type="password"],textarea,select{display:block;width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.03);color:var(--text);font-size:15px}
+input::placeholder,textarea::placeholder{color:rgba(255,255,255,0.45)}
+input:focus,textarea:focus,select:focus{outline:none;box-shadow:0 10px 30px rgba(59,130,246,0.08);border-color:rgba(59,130,246,0.9)}
+
+/* Cards and layout */
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:var(--radius);box-shadow:var(--shadow-soft);padding:12px}
+.container{max-width:1100px;margin:0 auto;padding:0 12px}
+
+/* Tables */
+.data-table th{background:rgba(255,255,255,0.02);font-weight:600;padding:10px;text-align:left;color:var(--muted)}
+.data-table td{padding:12px;border-top:1px solid rgba(255,255,255,0.02);color:var(--text)}
+.actions-cell{white-space:nowrap}
+
+/* Grid helpers */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-actions{display:flex;gap:8px}
+
+/* Hotel rows */
+.hotel-row{padding:10px 0}
+.success-box{color:#166534;background:#d1fae5;padding:8px;border-radius:6px}
+.error-box{color:#7f1d1d;background:#fee2e2;padding:8px;border-radius:6px}
+theme-force-overrides {
+	/* placeholder: avoided use of global !important overrides. */
+}
+
+/* App-wide card utility: use this to keep a consistent "dark-glass" card
+   appearance. Prefer using the existing `.card` elements; this rule is
+   intentionally not forcing `!important` so component-level tweaks can win
+   when necessary. */
+.card, .auth-card, .panel-card, .hotel-form {
+	background: linear-gradient(180deg, rgba(8,12,24,0.94), rgba(6,10,20,0.9));
+	color: var(--text);
+	box-shadow: 0 12px 40px rgba(2,6,23,0.22);
+	border-radius: var(--radius);
+}
+
+/* For components that embed inline styles we cannot change, use a slightly
+   higher-specificity selector to prefer the themed appearance without
+   resorting to global !important rules. This minimizes visual regressions
+   (charts, third-party components) while keeping a uniform look. */
+.admin-page div[style], .admin-page [style], .card[style] {
+	background: rgba(8,12,24,0.96);
+	color: var(--text);
+	box-shadow: 0 12px 40px rgba(2,6,23,0.28);
+	border-radius: 10px;
+}
+
+/* Make sure card bodies that contain tables or canvases are transparent so
+   content like charts are visible and not blocked by an inner white box. */
+.card .card-body { background: transparent; }
+
+/* Chart surface helper: style the canvas area so charts render on a light
+   surface while the surrounding card keeps the dark theme. This keeps
+   charts readable inside dark cards (no !important). */
+.chart-surface, #priceChart, .card .card-body canvas {
+	background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,250,250,0.98));
+	border-radius: 8px;
+	box-shadow: 0 8px 30px rgba(2,6,23,0.06);
+	width: 100%;
+	height: auto;
+	display: block;
+}
+
+/* Table defaults: ensure headers and cells inherit the theme and remain
+   readable. Keep specificity reasonable to avoid breaking third-party CSS. */
+.data-table th{background:rgba(255,255,255,0.02);color:var(--muted);}
+.data-table td{color:var(--text);}
+
+/* Reduce usage of !important across the board and favor targeted
+   component-level overrides when necessary. */
+
+/* global reset already defined above; keep Inter as primary font */

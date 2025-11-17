@@ -1,31 +1,25 @@
-<div style="padding: 20px; text-align: center; margin-top: 50px;">
-  <h1>Pricing MVP - Login</h1>
-  <p>Si ves esto, Angular est� funcionando.</p>
-  <form (ngSubmit)="onSubmit()">
-    <div style="margin: 15px 0;">
-      <input 
-        type="email" 
-        [(ngModel)]="email" 
-        name="email" 
-        placeholder="Email" 
-        required 
-      />
+<div class="auth-page">
+  <div class="auth-card card container">
+    <h2 class="mb-2">Iniciar sesión</h2>
+    
+
+    <form (ngSubmit)="onSubmit()" class="auth-form">
+      <div class="form-row">
+        <input class="input" type="email" [(ngModel)]="email" name="email" placeholder="Email" required />
+      </div>
+      <div class="form-row">
+        <input class="input" type="password" [(ngModel)]="password" name="password" placeholder="Contraseña" required />
+      </div>
+
+      <div class="form-row" style="text-align:right;">
+        <button class="btn btn-primary" type="submit">Iniciar sesión</button>
+      </div>
+    </form>
+
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+    <div class="mt-3 text-center muted">
+      ¿No tienes cuenta? <a routerLink="/register" class="link">Regístrate aquí</a>
     </div>
-    <div style="margin: 15px 0;">
-      <input 
-        type="password" 
-        [(ngModel)]="password" 
-        name="password" 
-        placeholder="Contrase�a" 
-        required 
-      />
-    </div>
-    <button type="submit">Iniciar Sesi�n</button>
-  </form>
-  <div *ngIf="errorMessage" style="color: red; margin-top: 15px;">
-    {{ errorMessage }}
-  </div>
-  <div style="margin-top: 20px; text-align: center;">
-    <p>¿No tienes cuenta? <a routerLink="/register" style="color: #007bff; cursor: pointer;">Regístrate aquí</a></p>
   </div>
 </div>

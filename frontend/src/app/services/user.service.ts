@@ -22,6 +22,14 @@ export class UserService {
     return this.http.put(`${this.apiUrl}/users/${id}`, payload);
   }
 
+  setUserRole(id: number, role: string): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/users/${id}/role`, { role });
+  }
+
+  createUser(payload: { email: string; password: string; fullName: string; role: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/users`, payload);
+  }
+
   toggleUserActive(id: number): Observable<any> {
     return this.http.patch(`${this.apiUrl}/users/${id}/toggle-active`, {});
   }

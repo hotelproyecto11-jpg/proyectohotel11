@@ -24,7 +24,17 @@ export class AdminPanelComponent implements OnInit {
 
   selectedUser: any = null;
   editingId: number | null = null;
-  editForm = { email: '', fullName: '' };
+  editForm = { email: '', fullName: '', role: '' };
+  roles: string[] = ['Admin','RevenueManager','GerenteComercial','StaffOperativo'];
+  showCreateForm = false;
+  createForm = { email: '', password: '', fullName: '', role: 'StaffOperativo' };
+  // Fallback map in case backend returns numeric enum values
+  roleMap: Record<number, string> = {
+    1: 'Admin',
+    2: 'RevenueManager',
+    3: 'GerenteComercial',
+    4: 'StaffOperativo'
+  };
 
   constructor(
     private userService: UserService,
@@ -41,7 +51,17 @@ export class AdminPanelComponent implements OnInit {
     this.errorMessage = '';
     this.userService.getUsers().subscribe({
       next: (data) => {
-        this.users = data;
+        // Normalize role to string name if backend returns numeric enums
+        this.users = (data || []).map((u: any) => {
+          const rawRole = u?.role;
+          let roleName = rawRole;
+          if (typeof rawRole === 'number') roleName = this.roleMap[rawRole] ?? String(rawRole);
+          if (typeof rawRole === 'string' && /^[0-9]+$/.test(rawRole)) {
+            const n = parseInt(rawRole, 10);
+            roleName = this.roleMap[n] ?? rawRole;
+          }
+          return { ...u, role: roleName };
+        });
         this.isLoading = false;
       },
       error: (err) => {
@@ -61,14 +81,14 @@ export class AdminPanelComponent implements OnInit {
 
   startEdit(user: any): void {
     this.editingId = user.id;
-    this.editForm = { email: user.email, fullName: user.fullName };
+    this.editForm = { email: user.email, fullName: user.fullName, role: user.role };
     this.successMessage = '';
     this.errorMessage = '';
   }
 
   cancelEdit(): void {
     this.editingId = null;
-    this.editForm = { email: '', fullName: '' };
+    this.editForm = { email: '', fullName: '', role: '' };
   }
 
   saveEdit(user: any): void {
@@ -79,13 +99,54 @@ export class AdminPanelComponent implements OnInit {
 
     this.userService.updateUser(user.id, this.editForm).subscribe({
       next: () => {
-        this.successMessage = 'Usuario actualizado';
-        this.editingId = null;
-        this.loadUsers();
+        // If role changed, call role endpoint
+        if (this.editForm.role && this.editForm.role !== user.role) {
+          this.userService.setUserRole(user.id, this.editForm.role).subscribe({
+            next: () => {
+              this.successMessage = 'Usuario actualizado';
+              this.editingId = null;
+              this.loadUsers();
+            },
+            error: (err) => {
+              console.error('Error al actualizar role:', err);
+              this.errorMessage = 'Error al actualizar role';
+            }
+          });
+        } else {
+          this.successMessage = 'Usuario actualizado';
+          this.editingId = null;
+          this.loadUsers();
+        }
       },
       error: (err) => {
         console.error('Error al actualizar:', err);
         this.errorMessage = 'Error al actualizar usuario';
+      }
+    });
+  }
+
+  toggleCreateForm() {
+    this.showCreateForm = !this.showCreateForm;
+    this.successMessage = '';
+    this.errorMessage = '';
+  }
+
+  createUser() {
+    if (!this.createForm.email || !this.createForm.password || !this.createForm.fullName) {
+      this.errorMessage = 'Email, contraseña y nombre completo son requeridos';
+      return;
+    }
+
+    this.userService.createUser(this.createForm).subscribe({
+      next: (res) => {
+        this.successMessage = 'Usuario creado';
+        this.showCreateForm = false;
+        this.createForm = { email: '', password: '', fullName: '', role: 'StaffOperativo' };
+        this.loadUsers();
+      },
+      error: (err) => {
+        console.error('Error al crear usuario:', err);
+        this.errorMessage = err?.error?.message || 'Error al crear usuario';
       }
     });
   }
