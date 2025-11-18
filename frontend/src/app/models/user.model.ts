@@ -8,6 +8,7 @@ export interface LoginResponse {
   email: string;
   role: string;
   fullName: string;
+  hotelId?: number | null;
 }
 
 export interface User {

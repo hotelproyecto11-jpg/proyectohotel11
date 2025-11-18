@@ -8,9 +8,9 @@ C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Application\obj\Debug\net9.0\Pri
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Application\obj\Debug\net9.0\PricingMvp.Application.AssemblyInfoInputs.cache
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Application\obj\Debug\net9.0\PricingMvp.Application.AssemblyInfo.cs
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Application\obj\Debug\net9.0\PricingMvp.Application.csproj.CoreCompileInputs.cache
+C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Application\obj\Debug\net9.0\PricingMvp.Application.sourcelink.json
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Application\obj\Debug\net9.0\PricingM.7ABE0AED.Up2Date
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Application\obj\Debug\net9.0\PricingMvp.Application.dll
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Application\obj\Debug\net9.0\refint\PricingMvp.Application.dll
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Application\obj\Debug\net9.0\PricingMvp.Application.pdb
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Application\obj\Debug\net9.0\ref\PricingMvp.Application.dll
-C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Application\obj\Debug\net9.0\PricingMvp.Application.sourcelink.json

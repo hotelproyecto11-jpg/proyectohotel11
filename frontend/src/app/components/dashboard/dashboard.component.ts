@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
 import { RoomService } from '../../services/room.service';
 import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 import { Room, PriceSuggestion } from '../../models/room.model';
 
 Chart.register(...registerables);
@@ -25,6 +26,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private roomService: RoomService,
     private authService: AuthService,
+    private notificationService: NotificationService,
     private router: Router
   ) {
     this.currentUser = this.authService.currentUserValue;
@@ -36,7 +38,8 @@ export class DashboardComponent implements OnInit {
 
   loadRooms(): void {
     this.isLoading = true;
-    this.roomService.getRooms().subscribe({
+    const hotelId = this.currentUser?.hotelId || null;
+    this.roomService.getRooms(hotelId).subscribe({
       next: (rooms) => {
         this.rooms = rooms;
         this.isLoading = false;
@@ -46,7 +49,7 @@ export class DashboardComponent implements OnInit {
       error: (error) => {
         console.error('Error al cargar habitaciones:', error);
         this.isLoading = false;
-        alert('Error al cargar habitaciones. Verifica tu conexión.');
+        this.notificationService.error('Error al cargar habitaciones. Verifica tu conexión.');
       }
     });
   }
@@ -66,33 +69,38 @@ export class DashboardComponent implements OnInit {
       error: (error) => {
         console.error('Error al obtener precio sugerido:', error);
         this.loadingPrices[room.id] = false;
-        alert('Error al calcular precio sugerido');
+        this.notificationService.error('Error al calcular precio sugerido');
       }
     });
   }
 
   applyPrice(room: Room): void {
     if (!room.suggestedPrice) {
-      alert('Primero calcula el precio sugerido');
+      this.notificationService.error('Primero calcula el precio sugerido');
       return;
     }
 
-    if (!confirm(`¿Aplicar precio de $${room.suggestedPrice} MXN para ${room.type}?`)) {
-      return;
-    }
+    this.notificationService.confirm(
+      `¿Aplicar precio de $${room.suggestedPrice} MXN para ${room.type}?`,
+      (confirmed) => {
+        if (!confirmed) return;
 
-    const today = new Date().toISOString().split('T')[0];
-    
-    this.roomService.applyPrice(room.id, room.suggestedPrice, today).subscribe({
-      next: () => {
-        alert('✅ Precio aplicado exitosamente');
-        this.loadRooms(); // Recargar datos
+        const today = new Date().toISOString().split('T')[0];
+        const suggestedPrice = room.suggestedPrice as number;
+        
+        this.roomService.applyPrice(room.id, suggestedPrice, today).subscribe({
+          next: () => {
+            this.notificationService.success('Precio aplicado exitosamente');
+            this.loadRooms(); // Recargar datos
+          },
+          error: (error) => {
+            console.error('Error al aplicar precio:', error);
+            this.notificationService.error('Error al aplicar precio');
+          }
+        });
       },
-      error: (error) => {
-        console.error('Error al aplicar precio:', error);
-        alert('❌ Error al aplicar precio');
-      }
-    });
+      '💰 Confirmar precio'
+    );
   }
 
   getDifference(room: Room): number {
@@ -179,9 +187,15 @@ export class DashboardComponent implements OnInit {
   }
 
   logout(): void {
-    if (confirm('¿Seguro que deseas cerrar sesión?')) {
-      this.authService.logout();
-    }
+    this.notificationService.confirm(
+      '¿Seguro que deseas cerrar sesión?',
+      (confirmed) => {
+        if (confirmed) {
+          this.authService.logout();
+        }
+      },
+      '👋 Cerrar sesión'
+    );
   }
 
   canApplyPrices(): boolean {

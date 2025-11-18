@@ -45,7 +45,8 @@ namespace PricingMvp.Api.Controllers
                 Token = token,
                 Email = user.Email,
                 Role = user.Role.ToString(),
-                FullName = user.FullName
+                FullName = user.FullName,
+                HotelId = user.HotelId
             });
         }
 
@@ -75,7 +76,8 @@ namespace PricingMvp.Api.Controllers
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
                 FullName = request.FullName,
                 Role = role,
-                IsActive = true
+                IsActive = true,
+                HotelId = request.HotelId
             };
 
             _context.Users.Add(user);

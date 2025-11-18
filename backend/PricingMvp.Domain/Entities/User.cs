@@ -10,5 +10,7 @@ namespace PricingMvp.Domain.Entities
         public string FullName { get; set; } = string.Empty;
         public UserRole Role { get; set; }
         public bool IsActive { get; set; } = true;
+        public int? HotelId { get; set; }
+        public Hotel? Hotel { get; set; }
     }
 }

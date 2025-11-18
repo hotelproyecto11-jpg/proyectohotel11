@@ -21,11 +21,18 @@ namespace PricingMvp.Api.Controllers
         
         // GET: api/rooms
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<RoomDto>>> GetRooms()
+        public async Task<ActionResult<IEnumerable<RoomDto>>> GetRooms([FromQuery] int? hotelId = null)
         {
-            var rooms = await _context.Rooms
+            var query = _context.Rooms
                 .Include(r => r.Hotel)
-                .Where(r => !r.IsDeleted)
+                .Where(r => !r.IsDeleted);
+            
+            if (hotelId.HasValue)
+            {
+                query = query.Where(r => r.HotelId == hotelId.Value);
+            }
+            
+            var rooms = await query
                 .Select(r => new RoomDto
                 {
                     Id = r.Id,

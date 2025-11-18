@@ -66,6 +66,13 @@
               <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
             </select>
           </div>
+          <div class="spaced-block">
+            <label>Hotel:</label>
+            <select [(ngModel)]="createForm.hotelId" class="form-control">
+              <option [value]="null">Sin hotel asignado</option>
+              <option *ngFor="let hotel of hotels" [value]="hotel.id">{{ hotel.name }} - {{ hotel.city }}</option>
+            </select>
+          </div>
           <div class="action-row">
             <button class="btn btn-primary" (click)="createUser()">Crear</button>
             <button class="btn btn-ghost" (click)="toggleCreateForm()">Cancelar</button>
@@ -115,6 +122,13 @@
               <label>Rol:</label>
               <select name="editRole" [(ngModel)]="editForm.role" class="form-control">
                 <option *ngFor="let r of roles" [value]="r">{{ r }}</option>
+              </select>
+            </div>
+            <div class="spaced-block">
+              <label>Hotel:</label>
+              <select name="editHotel" [(ngModel)]="editForm.hotelId" class="form-control">
+                <option [value]="null">Sin hotel asignado</option>
+                <option *ngFor="let hotel of hotels" [value]="hotel.id">{{ hotel.name }} - {{ hotel.city }}</option>
               </select>
             </div>
             <div class="action-row">

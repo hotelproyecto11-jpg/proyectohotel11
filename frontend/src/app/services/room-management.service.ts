@@ -30,7 +30,10 @@ export class RoomManagementService {
     return this.http.delete(`${this.apiUrl}/hotels/${id}`);
   }
 
-  getRooms(): Observable<any[]> {
+  getRooms(hotelId?: number | null): Observable<any[]> {
+    if (hotelId) {
+      return this.http.get<any[]>(`${this.apiUrl}/rooms?hotelId=${hotelId}`);
+    }
     return this.http.get<any[]>(`${this.apiUrl}/rooms`);
   }
 

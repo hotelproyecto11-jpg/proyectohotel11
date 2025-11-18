@@ -11,10 +11,10 @@ C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Infrastructure\obj\Debug\net9.0\
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Infrastructure\obj\Debug\net9.0\PricingMvp.Infrastructure.AssemblyInfoInputs.cache
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Infrastructure\obj\Debug\net9.0\PricingMvp.Infrastructure.AssemblyInfo.cs
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Infrastructure\obj\Debug\net9.0\PricingMvp.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Infrastructure\obj\Debug\net9.0\PricingMvp.Infrastructure.sourcelink.json
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Infrastructure\obj\Debug\net9.0\PricingM.F649EC11.Up2Date
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Infrastructure\obj\Debug\net9.0\PricingMvp.Infrastructure.dll
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Infrastructure\obj\Debug\net9.0\refint\PricingMvp.Infrastructure.dll
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Infrastructure\obj\Debug\net9.0\PricingMvp.Infrastructure.pdb
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Infrastructure\obj\Debug\net9.0\PricingMvp.Infrastructure.genruntimeconfig.cache
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Infrastructure\obj\Debug\net9.0\ref\PricingMvp.Infrastructure.dll
-C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Infrastructure\obj\Debug\net9.0\PricingMvp.Infrastructure.sourcelink.json

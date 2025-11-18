@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RoomManagementService } from '../../services/room-management.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-room-manager',
@@ -41,7 +42,7 @@ export class RoomManagerComponent implements OnInit {
 
   roomTypes = ['Single', 'Double', 'Suite', 'Deluxe', 'Presidential'];
 
-  constructor(private roomService: RoomManagementService) {}
+  constructor(private roomService: RoomManagementService, private notificationService: NotificationService) {}
 
   ngOnInit(): void {
     this.loadHotels();
@@ -158,18 +159,24 @@ export class RoomManagerComponent implements OnInit {
   }
 
   deleteRoom(room: any): void {
-    if (!confirm(`¿Eliminar habitación ${room.roomNumber}?`)) return;
+    this.notificationService.confirm(
+      `¿Eliminar habitación ${room.roomNumber}?`,
+      (confirmed) => {
+        if (!confirmed) return;
 
-    this.roomService.deleteRoom(room.id).subscribe({
-      next: () => {
-        this.successMessage = 'Habitación eliminada';
-        this.loadRooms();
+        this.roomService.deleteRoom(room.id).subscribe({
+          next: () => {
+            this.successMessage = 'Habitación eliminada';
+            this.loadRooms();
+          },
+          error: (err) => {
+            console.error('Error al eliminar:', err);
+            this.errorMessage = 'Error al eliminar habitación';
+          }
+        });
       },
-      error: (err) => {
-        console.error('Error al eliminar:', err);
-        this.errorMessage = 'Error al eliminar habitación';
-      }
-    });
+      '⚠️ Confirmar eliminación'
+    );
   }
 
   startEdit(room: any): void {

@@ -5,8 +5,8 @@ C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\PricingM
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\PricingMvp.Domain.AssemblyInfoInputs.cache
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\PricingMvp.Domain.AssemblyInfo.cs
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\PricingMvp.Domain.csproj.CoreCompileInputs.cache
+C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\PricingMvp.Domain.sourcelink.json
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\PricingMvp.Domain.dll
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\refint\PricingMvp.Domain.dll
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\PricingMvp.Domain.pdb
 C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\ref\PricingMvp.Domain.dll
-C:\Users\xnathan\pricing-mvp\backend\PricingMvp.Domain\obj\Debug\net9.0\PricingMvp.Domain.sourcelink.json

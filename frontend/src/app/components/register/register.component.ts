@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
+import { HotelService, Hotel } from '../../services/hotel.service';
 
 @Component({
   selector: 'app-register',
@@ -11,17 +13,52 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
   email = '';
   password = '';
+  confirmPassword = '';
   fullName = '';
+  hotelId: number | null = null;
   errorMessage = '';
   isLoading = false;
+  hotels: Hotel[] = [];
 
   // Validación mínima en frontend: solo dominio corporativo permitido
   readonly allowedDomain = '@posadas.com';
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(
+    private auth: AuthService,
+    private notificationService: NotificationService,
+    private hotelService: HotelService,
+    private router: Router
+  ) {
+    this.resetForm();
+  }
+
+  ngOnInit() {
+    this.loadHotels();
+  }
+
+  loadHotels() {
+    this.hotelService.getHotels().subscribe({
+      next: (hotels) => {
+        this.hotels = hotels;
+      },
+      error: (err) => {
+        console.error('Error cargando hoteles:', err);
+        this.errorMessage = 'Error al cargar la lista de hoteles';
+      }
+    });
+  }
+
+  resetForm() {
+    this.email = '';
+    this.password = '';
+    this.confirmPassword = '';
+    this.fullName = '';
+    this.hotelId = null;
+    this.errorMessage = '';
+  }
 
   onSubmit() {
     this.errorMessage = '';
@@ -45,13 +82,27 @@ export class RegisterComponent {
       return;
     }
 
+    if (this.password !== this.confirmPassword) {
+      this.errorMessage = 'Las contraseñas no coinciden';
+      return;
+    }
+
+    if (!this.hotelId) {
+      this.errorMessage = 'Por favor selecciona un hotel';
+      return;
+    }
+
     this.isLoading = true;
-    // Nota: no enviamos rol desde el frontend; el backend asignará el rol por defecto
-    this.auth.register({ email: this.email, password: this.password, fullName: this.fullName })
+    this.auth.register({ 
+      email: this.email, 
+      password: this.password, 
+      fullName: this.fullName,
+      hotelId: this.hotelId
+    } as any)
       .subscribe({
         next: () => {
           this.isLoading = false;
-          alert('Usuario creado. Inicia sesión con tus credenciales.');
+          this.notificationService.success('Usuario creado. Inicia sesión con tus credenciales.');
           this.router.navigate(['/login']);
         },
         error: (err) => {

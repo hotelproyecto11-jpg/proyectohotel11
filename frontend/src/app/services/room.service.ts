@@ -11,7 +11,10 @@ export class RoomService {
 
   constructor(private http: HttpClient) { }
 
-  getRooms(): Observable<Room[]> {
+  getRooms(hotelId?: number | null): Observable<Room[]> {
+    if (hotelId) {
+      return this.http.get<Room[]>(`${this.apiUrl}/rooms?hotelId=${hotelId}`);
+    }
     return this.http.get<Room[]>(`${this.apiUrl}/rooms`);
   }
 

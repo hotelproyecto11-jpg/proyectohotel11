@@ -16,6 +16,8 @@ namespace PricingMvp.Application.DTOs
         [MinLength(2, ErrorMessage = "El nombre completo es requerido")]
         public string FullName { get; set; } = string.Empty;
 
+        public int? HotelId { get; set; }
+
         // NOTE: Role is intentionally removed from the public registration DTO.
         // Roles must be assigned by an Admin via the Users management endpoints.
     }

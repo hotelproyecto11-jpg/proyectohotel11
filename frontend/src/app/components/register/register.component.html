@@ -10,11 +10,21 @@
         <input class="input" type="email" [(ngModel)]="email" name="email" placeholder="Email" required />
       </div>
       <div class="form-row">
+        <label for="hotel-select" class="form-label">Seleccionar hotel</label>
+        <select id="hotel-select" class="input" [(ngModel)]="hotelId" name="hotelId" required>
+          <option value="" disabled selected>Elige un hotel...</option>
+          <option *ngFor="let hotel of hotels" [value]="hotel.id">{{ hotel.name }} - {{ hotel.city }}</option>
+        </select>
+      </div>
+      <div class="form-row">
         <input class="input" type="password" [(ngModel)]="password" name="password" placeholder="Contraseña" required />
+      </div>
+      <div class="form-row">
+        <input class="input" type="password" [(ngModel)]="confirmPassword" name="confirmPassword" placeholder="Confirmar contraseña" required />
       </div>
 
       <div class="form-row" style="text-align:right;">
-        <button class="btn btn-primary" type="submit">Registrar</button>
+        <button class="btn btn-primary" type="submit" [disabled]="isLoading">{{ isLoading ? 'Registrando...' : 'Registrar' }}</button>
       </div>
 
       <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>

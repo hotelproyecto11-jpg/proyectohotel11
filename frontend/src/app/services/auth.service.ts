@@ -37,7 +37,8 @@ export class AuthService {
             token: resp.token ?? resp.Token ?? null,
             email: resp.email ?? resp.Email ?? null,
             role: resp.role ?? resp.Role ?? null,
-            fullName: resp.fullName ?? resp.FullName ?? null
+            fullName: resp.fullName ?? resp.FullName ?? null,
+            hotelId: resp.hotelId ?? resp.HotelId ?? null
           } as LoginResponse;
 
           // Guardar usuario y token normalizados
@@ -50,7 +51,7 @@ export class AuthService {
       );
   }
 
-  register(payload: { email: string; password: string; fullName: string; role?: string }): Observable<any> {
+  register(payload: { email: string; password: string; fullName: string; role?: string; hotelId?: number | null }): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/register`, payload);
   }
 

@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
+import { HotelService, Hotel } from '../../services/hotel.service';
 import { RoomManagerComponent } from '../room-manager/room-manager.component';
 import { HotelManagerComponent } from '../hotel-manager/hotel-manager.component';
 
@@ -16,6 +18,7 @@ import { HotelManagerComponent } from '../hotel-manager/hotel-manager.component'
 })
 export class AdminPanelComponent implements OnInit {
   users: any[] = [];
+  hotels: Hotel[] = [];
   isLoading = false;
   errorMessage = '';
   successMessage = '';
@@ -24,10 +27,10 @@ export class AdminPanelComponent implements OnInit {
 
   selectedUser: any = null;
   editingId: number | null = null;
-  editForm = { email: '', fullName: '', role: '' };
+  editForm = { email: '', fullName: '', role: '', hotelId: null as number | null };
   roles: string[] = ['Admin','RevenueManager','GerenteComercial','StaffOperativo'];
   showCreateForm = false;
-  createForm = { email: '', password: '', fullName: '', role: 'StaffOperativo' };
+  createForm = { email: '', password: '', fullName: '', role: 'StaffOperativo', hotelId: null as number | null };
   // Fallback map in case backend returns numeric enum values
   roleMap: Record<number, string> = {
     1: 'Admin',
@@ -39,11 +42,25 @@ export class AdminPanelComponent implements OnInit {
   constructor(
     private userService: UserService,
     private authService: AuthService,
+    private notificationService: NotificationService,
+    private hotelService: HotelService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.loadUsers();
+    this.loadHotels();
+  }
+
+  loadHotels() {
+    this.hotelService.getHotels().subscribe({
+      next: (hotels) => {
+        this.hotels = hotels;
+      },
+      error: (err) => {
+        console.error('Error cargando hoteles:', err);
+      }
+    });
   }
 
   loadUsers(): void {
@@ -81,14 +98,14 @@ export class AdminPanelComponent implements OnInit {
 
   startEdit(user: any): void {
     this.editingId = user.id;
-    this.editForm = { email: user.email, fullName: user.fullName, role: user.role };
+    this.editForm = { email: user.email, fullName: user.fullName, role: user.role, hotelId: user.hotelId };
     this.successMessage = '';
     this.errorMessage = '';
   }
 
   cancelEdit(): void {
     this.editingId = null;
-    this.editForm = { email: '', fullName: '', role: '' };
+    this.editForm = { email: '', fullName: '', role: '', hotelId: null };
   }
 
   saveEdit(user: any): void {
@@ -141,7 +158,7 @@ export class AdminPanelComponent implements OnInit {
       next: (res) => {
         this.successMessage = 'Usuario creado';
         this.showCreateForm = false;
-        this.createForm = { email: '', password: '', fullName: '', role: 'StaffOperativo' };
+        this.createForm = { email: '', password: '', fullName: '', role: 'StaffOperativo', hotelId: null };
         this.loadUsers();
       },
       error: (err) => {
@@ -165,19 +182,25 @@ export class AdminPanelComponent implements OnInit {
   }
 
   deleteUser(user: any): void {
-    if (!confirm(`¿Eliminar usuario ${user.email}?`)) return;
+    this.notificationService.confirm(
+      `¿Eliminar usuario ${user.email}?`,
+      (confirmed) => {
+        if (!confirmed) return;
 
-    this.userService.deleteUser(user.id).subscribe({
-      next: () => {
-        this.successMessage = 'Usuario eliminado';
-        this.loadUsers();
-        this.selectedUser = null;
+        this.userService.deleteUser(user.id).subscribe({
+          next: () => {
+            this.successMessage = 'Usuario eliminado';
+            this.loadUsers();
+            this.selectedUser = null;
+          },
+          error: (err) => {
+            console.error('Error al eliminar:', err);
+            this.errorMessage = err?.error?.message || 'Error al eliminar usuario';
+          }
+        });
       },
-      error: (err) => {
-        console.error('Error al eliminar:', err);
-        this.errorMessage = err?.error?.message || 'Error al eliminar usuario';
-      }
-    });
+      '⚠️ Confirmar eliminación'
+    );
   }
 
   logout(): void {
