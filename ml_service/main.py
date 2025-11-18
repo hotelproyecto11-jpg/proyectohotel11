@@ -62,7 +62,17 @@ def train(req: TrainRequest):
         df = pd.DataFrame([features_from_row(r) for r in rows])
         y = pd.Series([r['price'] for r in rows])
 
-        model = GradientBoostingRegressor(n_estimators=100, learning_rate=0.1, max_depth=4)
+        # Modelo mejorado con parámetros optimizados para mayor sensibilidad
+        model = GradientBoostingRegressor(
+            n_estimators=150,
+            learning_rate=0.15,
+            max_depth=6,
+            min_samples_split=3,
+            min_samples_leaf=1,
+            subsample=0.8,
+            max_features='sqrt',
+            random_state=42
+        )
         model.fit(df, y)
         joblib.dump(model, MODEL_PATH)
         return { 'status': 'ok', 'modelVersion': os.path.abspath(MODEL_PATH) }

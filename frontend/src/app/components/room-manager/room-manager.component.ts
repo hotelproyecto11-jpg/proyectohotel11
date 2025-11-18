@@ -34,7 +34,6 @@ export class RoomManagerComponent implements OnInit {
     type: 'Single',
     basePrice: 0,
     capacity: 1,
-    quantity: 1,
     hasBalcony: false,
     hasSeaView: false,
     squareMeters: 0
@@ -97,7 +96,6 @@ export class RoomManagerComponent implements OnInit {
       type: 'Single',
       basePrice: 0,
       capacity: 1,
-      quantity: 1,
       hasBalcony: false,
       hasSeaView: false,
       squareMeters: 0
@@ -112,50 +110,29 @@ export class RoomManagerComponent implements OnInit {
       return;
     }
 
-    // Crear múltiples habitaciones si quantity > 1
-    const quantity = this.newRoom.quantity || 1;
-    let createdCount = 0;
-    let failedCount = 0;
+    const roomPayload = {
+      hotelId: this.newRoom.hotelId,
+      roomNumber: this.newRoom.roomNumber,
+      type: this.newRoom.type,
+      basePrice: this.newRoom.basePrice,
+      capacity: this.newRoom.capacity,
+      hasBalcony: this.newRoom.hasBalcony,
+      hasSeaView: this.newRoom.hasSeaView,
+      squareMeters: this.newRoom.squareMeters
+    };
 
-    for (let i = 0; i < quantity; i++) {
-      const roomPayload = {
-        hotelId: this.newRoom.hotelId,
-        roomNumber: this.newRoom.roomNumber + (quantity > 1 ? `-${i + 1}` : ''),
-        type: this.newRoom.type,
-        basePrice: this.newRoom.basePrice,
-        capacity: this.newRoom.capacity,
-        quantity: 1,
-        hasBalcony: this.newRoom.hasBalcony,
-        hasSeaView: this.newRoom.hasSeaView,
-        squareMeters: this.newRoom.squareMeters
-      };
-
-      this.roomService.createRoom(roomPayload).subscribe({
-        next: () => {
-          createdCount++;
-          if (createdCount + failedCount === quantity) {
-            this.successMessage = `${createdCount} habitacion(es) creada(s)`;
-            if (failedCount > 0) {
-              this.errorMessage = `${failedCount} habitacion(es) fallaron`;
-            }
-            this.loadRooms();
-            this.resetForm();
-            this.showForm = false;
-          }
-        },
-        error: (err) => {
-          failedCount++;
-          console.error('Error al crear habitación:', err);
-          if (createdCount + failedCount === quantity) {
-            this.successMessage = `${createdCount} habitacion(es) creada(s)`;
-            if (failedCount > 0) {
-              this.errorMessage = `${failedCount} habitacion(es) fallaron`;
-            }
-            this.loadRooms();
-          }
-        }
-      });
-    }
+    this.roomService.createRoom(roomPayload).subscribe({
+      next: () => {
+        this.successMessage = 'Habitación creada exitosamente';
+        this.loadRooms();
+        this.resetForm();
+        this.showForm = false;
+      },
+      error: (err) => {
+        console.error('Error al crear habitación:', err);
+        this.errorMessage = 'Error al crear habitación';
+      }
+    });
   }
 
   deleteRoom(room: any): void {

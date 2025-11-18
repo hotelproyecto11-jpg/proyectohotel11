@@ -82,48 +82,62 @@ namespace PricingMvp.Infrastructure.Services
 
             decimal suggestedPrice = basePrice;
             
-            // Regla 1: Ajuste por ocupación
-            if (avgOccupancy > 80)
-                suggestedPrice *= 1.15m; // Subir 15%
+            // Regla 1: Ajuste por ocupación (más agresivo)
+            if (avgOccupancy > 85)
+                suggestedPrice *= 1.35m; // Subir 35%
+            else if (avgOccupancy > 75)
+                suggestedPrice *= 1.25m; // Subir 25%
             else if (avgOccupancy > 65)
-                suggestedPrice *= 1.08m; // Subir 8%
-            else if (avgOccupancy < 40)
+                suggestedPrice *= 1.12m; // Subir 12%
+            else if (avgOccupancy > 50)
+                suggestedPrice *= 1.05m; // Subir 5%
+            else if (avgOccupancy < 35)
+                suggestedPrice *= 0.80m; // Bajar 20%
+            else if (avgOccupancy < 50)
                 suggestedPrice *= 0.90m; // Bajar 10%
             
-            // Regla 2: Ajuste por día de semana
+            // Regla 2: Ajuste por día de semana (fin de semana más alto)
             if (targetDate.DayOfWeek == DayOfWeek.Friday || 
                 targetDate.DayOfWeek == DayOfWeek.Saturday)
             {
-                suggestedPrice *= 1.12m; // Fin de semana +12%
+                suggestedPrice *= 1.20m; // Fin de semana +20%
+            }
+            else if (targetDate.DayOfWeek == DayOfWeek.Sunday)
+            {
+                suggestedPrice *= 1.10m; // Domingo +10%
             }
             
-            // Regla 3: Ajuste por temporada (ejemplo simplificado)
+            // Regla 3: Ajuste por temporada (más variación)
             int month = targetDate.Month;
-            if (month >= 12 || month <= 2) // Temporada alta
-                suggestedPrice *= 1.20m;
-            else if (month >= 6 && month <= 8) // Temporada media
-                suggestedPrice *= 1.10m;
+            if (month == 12 || month == 1) // Navidad y Año Nuevo
+                suggestedPrice *= 1.40m; // +40%
+            else if (month == 7 || month == 8) // Verano pico
+                suggestedPrice *= 1.25m; // +25%
+            else if (month >= 11 || month == 2) // Puentes y temporadas intermedias
+                suggestedPrice *= 1.15m; // +15%
+            else if (month >= 6 && month <= 9) // Verano general
+                suggestedPrice *= 1.12m; // +12%
+            else if (month >= 3 && month <= 5) // Primavera
+                suggestedPrice *= 1.08m; // +8%
 
-            // Si no hay historial (ni de la habitación ni del hotel) y el resultado
-            // es igual (o casi igual) al precio base, aplicar una variación mínima
-            // basada en la ocupación del hotel para producir subidas o bajadas.
+            // Regla 4: Ajuste por características de la habitación
+            if (room.HasSeaView)
+                suggestedPrice *= 1.15m; // Vista al mar +15%
+            
+            if (room.HasBalcony)
+                suggestedPrice *= 1.10m; // Balcón +10%
+            
+            if (room.Capacity >= 4)
+                suggestedPrice *= 1.12m; // Capacidad alta +12%
+
+            // Si no hay historial, aplicar variación basada en ocupación proyectada
             if (!hadHistory)
             {
-                var multiplier = suggestedPrice / basePrice;
-                if (Math.Abs(multiplier - 1m) < 0.03m)
-                {
-                    // ratio: -1 .. 1  (ocupación 20 => -1, ocupación 100 => +1)
-                    var diff = avgOccupancy - 60.0; // centrar en 60
-                    var ratio = Math.Max(-1.0, Math.Min(1.0, diff / 40.0));
-                    // variation between 3% and 5% depending on magnitude
-                    decimal variation = 0.03m + (decimal)(Math.Abs(ratio) * 0.02);
-
-                    if (ratio > 0)
-                        suggestedPrice *= 1 + variation; // subir
-                    else if (ratio < 0)
-                        suggestedPrice *= 1 - variation; // bajar
-                    // si ratio == 0 => dejar igual
-                }
+                // Añadir variación mayor si la ocupación proyectada es alta o baja
+                if (avgOccupancy > 75)
+                    suggestedPrice *= 1.08m; // +8% adicional por ocupación alta
+                else if (avgOccupancy < 45)
+                    suggestedPrice *= 0.95m; // -5% adicional por ocupación baja
             }
 
             // Intentar consultar servicio ML si está disponible
