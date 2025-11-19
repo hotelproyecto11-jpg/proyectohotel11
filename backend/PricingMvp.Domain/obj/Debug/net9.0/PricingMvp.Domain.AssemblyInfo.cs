@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PricingMvp.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+09417e046a203b5e25756c34b77846b6b49cedc8")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7543ed18bbfb1ec3b878d7f4190589e0d87abe05")]
 [assembly: System.Reflection.AssemblyProductAttribute("PricingMvp.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PricingMvp.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PricingMvp.Application.DTOs;
 using PricingMvp.Application.Interfaces;
 using PricingMvp.Domain.Entities;
+using System.Security.Claims;
 
 namespace PricingMvp.Api.Controllers
 {
@@ -23,11 +24,27 @@ namespace PricingMvp.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RoomDto>>> GetRooms([FromQuery] int? hotelId = null)
         {
+            // Obtener email y role del usuario autenticado
+            var currentUserEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+            var currentUserRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+            
             var query = _context.Rooms
                 .Include(r => r.Hotel)
                 .Where(r => !r.IsDeleted);
             
-            if (hotelId.HasValue)
+            // Si es Admin y no es admin@pricingmvp.com, filtrar por su hotel
+            if (currentUserRole == "Admin" && currentUserEmail != "admin@pricingmvp.com")
+            {
+                var currentAdmin = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+                
+                if (currentAdmin?.HotelId == null)
+                    return BadRequest(new { message = "El admin no está asignado a un hotel" });
+                
+                query = query.Where(r => r.HotelId == currentAdmin.HotelId);
+            }
+            // Si se especifica hotelId en la query, aplicar ese filtro
+            else if (hotelId.HasValue)
             {
                 query = query.Where(r => r.HotelId == hotelId.Value);
             }

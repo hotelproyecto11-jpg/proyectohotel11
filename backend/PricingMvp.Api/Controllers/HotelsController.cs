@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PricingMvp.Application.Interfaces;
 using PricingMvp.Application.DTOs;
+using System.Security.Claims;
 
 namespace PricingMvp.Api.Controllers
 {
@@ -98,6 +99,11 @@ namespace PricingMvp.Api.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteHotel(int id)
         {
+            // Solo admin@pricingmvp.com puede eliminar hoteles
+            var currentUserEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+            if (currentUserEmail != "admin@pricingmvp.com")
+                return Forbid();
+
             var hotel = await _context.Hotels.FindAsync(id);
             if (hotel == null)
                 return NotFound(new { message = "Hotel no encontrado" });

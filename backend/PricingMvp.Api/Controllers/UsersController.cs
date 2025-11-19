@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PricingMvp.Application.Interfaces;
+using System.Security.Claims;
 
 namespace PricingMvp.Api.Controllers
 {
@@ -21,7 +22,26 @@ namespace PricingMvp.Api.Controllers
         [HttpGet]
         public async Task<ActionResult> GetUsers()
         {
-            var users = await _context.Users
+            // Obtener email del usuario autenticado
+            var currentUserEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+            
+            // Si es admin@pricingmvp.com, ver todos los usuarios
+            // Si es otro admin, solo ver usuarios del mismo hotel
+            var query = _context.Users.AsQueryable();
+            
+            if (currentUserEmail != "admin@pricingmvp.com")
+            {
+                // Obtener HotelId del admin actual
+                var currentAdmin = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+                
+                if (currentAdmin?.HotelId == null)
+                    return BadRequest(new { message = "El admin no está asignado a un hotel" });
+                
+                query = query.Where(u => u.HotelId == currentAdmin.HotelId);
+            }
+            
+            var users = await query
                 .Select(u => new
                 {
                     u.Id,
@@ -29,6 +49,7 @@ namespace PricingMvp.Api.Controllers
                     u.FullName,
                     Role = u.Role.ToString(),
                     u.IsActive,
+                    u.HotelId,
                     CreatedAt = u.CreatedAt
                 })
                 .ToListAsync();
@@ -183,6 +204,44 @@ namespace PricingMvp.Api.Controllers
 
             return Ok(new { message = "Usuario creado", email = user.Email, role = user.Role.ToString() });
         }
+
+        // PATCH: api/users/{id}/hotel
+        [HttpPatch("{id}/hotel")]
+        public async Task<ActionResult> ChangeUserHotel(int id, [FromBody] ChangeUserHotelDto dto)
+        {
+            if (dto == null || !dto.HotelId.HasValue)
+                return BadRequest(new { message = "HotelId es requerido" });
+
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
+                return NotFound(new { message = "Usuario no encontrado" });
+
+            // Verificar que el hotel existe
+            var hotel = await _context.Hotels.FindAsync(dto.HotelId.Value);
+            if (hotel == null)
+                return NotFound(new { message = "Hotel no encontrado" });
+
+            // Si el admin actual no es admin@pricingmvp.com, solo puede cambiar usuarios de su hotel
+            var currentUserEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+            if (currentUserEmail != "admin@pricingmvp.com")
+            {
+                var currentAdmin = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Email == currentUserEmail);
+
+                // El admin solo puede cambiar usuarios del mismo hotel
+                if (user.HotelId != currentAdmin?.HotelId)
+                    return Forbid();
+
+                // El admin solo puede asignar usuarios a su propio hotel
+                if (dto.HotelId.Value != currentAdmin.HotelId)
+                    return BadRequest(new { message = "Solo puedes asignar usuarios a tu propio hotel" });
+            }
+
+            user.HotelId = dto.HotelId.Value;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Hotel del usuario actualizado", hotelId = user.HotelId });
+        }
     }
 
     public class UpdateUserDto
@@ -202,5 +261,10 @@ namespace PricingMvp.Api.Controllers
         public string Password { get; set; } = string.Empty;
         public string FullName { get; set; } = string.Empty;
         public string Role { get; set; } = string.Empty;
+    }
+
+    public class ChangeUserHotelDto
+    {
+        public int? HotelId { get; set; }
     }
 }
