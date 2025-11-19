@@ -19,7 +19,7 @@ namespace PricingMvp.Api.Controllers
             _context = context;
         }
 
-        // GET: api/hotels
+        // GET: /api/hotels - Obtiene lista de todos los hoteles (acceso público)
         [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<object>>> GetHotels()
@@ -31,7 +31,7 @@ namespace PricingMvp.Api.Controllers
             return Ok(hotels);
         }
 
-        // POST: api/hotels
+        // POST: /api/hotels - Crea un nuevo hotel (solo Admin)
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<HotelDto>> CreateHotel([FromBody] PricingMvp.Application.DTOs.CreateHotelDto dto)
@@ -60,7 +60,7 @@ namespace PricingMvp.Api.Controllers
             return CreatedAtAction(nameof(GetHotels), new { id = hotel.Id }, result);
         }
 
-        // GET: api/hotels/5
+        // GET: /api/hotels/{id} - Obtiene un hotel específico por ID (acceso público)
         [HttpGet("{id}")]
         [AllowAnonymous]
         public async Task<ActionResult<HotelDto>> GetHotel(int id)
@@ -73,7 +73,7 @@ namespace PricingMvp.Api.Controllers
             return Ok(dto);
         }
 
-        // PUT: api/hotels/5
+        // PUT: /api/hotels/{id} - Actualiza un hotel existente (solo Admin)
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateHotel(int id, [FromBody] CreateHotelDto dto)
@@ -94,7 +94,7 @@ namespace PricingMvp.Api.Controllers
             return NoContent();
         }
 
-        // DELETE: api/hotels/5
+        // DELETE: /api/hotels/{id} - Elimina un hotel (solo admin@pricingmvp.com puede eliminar)
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteHotel(int id)

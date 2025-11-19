@@ -18,7 +18,7 @@ namespace PricingMvp.Application.DTOs
 
         public int? HotelId { get; set; }
 
-        // NOTE: Role is intentionally removed from the public registration DTO.
-        // Roles must be assigned by an Admin via the Users management endpoints.
+        // NOTA: El rol se removió intencionalmente del DTO de registro público.
+        // Los roles debe ser asignados por un Admin a través de los endpoints de gestión de usuarios.
     }
 }

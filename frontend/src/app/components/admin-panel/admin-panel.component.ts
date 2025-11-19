@@ -31,7 +31,7 @@ export class AdminPanelComponent implements OnInit {
   roles: string[] = ['Admin','RevenueManager','GerenteComercial','StaffOperativo'];
   showCreateForm = false;
   createForm = { email: '', password: '', fullName: '', role: 'StaffOperativo', hotelId: null as number | null };
-  // Fallback map in case backend returns numeric enum values
+  // Mapa de valores en caso de que backend retorne enums numéricos
   roleMap: Record<number, string> = {
     1: 'Admin',
     2: 'RevenueManager',
@@ -68,7 +68,7 @@ export class AdminPanelComponent implements OnInit {
     this.errorMessage = '';
     this.userService.getUsers().subscribe({
       next: (data) => {
-        // Normalize role to string name if backend returns numeric enums
+        // Normalizar rol a string si backend retorna enums numéricos
         this.users = (data || []).map((u: any) => {
           const rawRole = u?.role;
           let roleName = rawRole;
@@ -116,7 +116,7 @@ export class AdminPanelComponent implements OnInit {
 
     this.userService.updateUser(user.id, this.editForm).subscribe({
       next: () => {
-        // If role changed, call role endpoint
+        // Si el rol cambió, llamar al endpoint de cambio de rol
         if (this.editForm.role && this.editForm.role !== user.role) {
           this.userService.setUserRole(user.id, this.editForm.role).subscribe({
             next: () => {

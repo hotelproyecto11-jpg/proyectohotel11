@@ -16,7 +16,7 @@ namespace PricingMvp.Api.Controllers
             _pricingService = pricingService;
         }
         
-        // GET: api/pricing/suggest/5?date=2025-12-25
+        // GET: /api/pricing/suggest/{roomId} - Obtiene precio sugerido para una habitación en una fecha
         [AllowAnonymous]
         [HttpGet("suggest/{roomId}")]
         public async Task<ActionResult> GetSuggestedPrice(
@@ -47,7 +47,7 @@ namespace PricingMvp.Api.Controllers
             }
         }
         
-        // POST: api/pricing/apply
+        // POST: /api/pricing/apply - Aplica un precio sugerido a una habitación
         [HttpPost("apply")]
         [Authorize(Roles = "Admin,RevenueManager")]
         public async Task<ActionResult> ApplySuggestedPrice([FromBody] ApplyPriceDto dto)

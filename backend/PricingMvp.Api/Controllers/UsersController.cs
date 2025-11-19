@@ -18,7 +18,7 @@ namespace PricingMvp.Api.Controllers
             _context = context;
         }
 
-        // GET: api/users
+        // GET: /api/users - Obtiene lista de usuarios (filtra por hotel si es admin regular)
         [HttpGet]
         public async Task<ActionResult> GetUsers()
         {
@@ -57,7 +57,7 @@ namespace PricingMvp.Api.Controllers
             return Ok(users);
         }
 
-        // GET: api/users/{id}
+        // GET: /api/users/{id} - Obtiene un usuario específico por ID
         [HttpGet("{id}")]
         public async Task<ActionResult> GetUser(int id)
         {
@@ -80,7 +80,7 @@ namespace PricingMvp.Api.Controllers
             return Ok(user);
         }
 
-        // PUT: api/users/{id}
+        // PUT: /api/users/{id} - Actualiza los datos de un usuario
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateUser(int id, [FromBody] UpdateUserDto dto)
         {
@@ -113,7 +113,7 @@ namespace PricingMvp.Api.Controllers
             return Ok(new { message = $"Usuario {status}", isActive = user.IsActive });
         }
 
-        // DELETE: api/users/{id}
+        // DELETE: /api/users/{id} - Elimina un usuario (solo Admin)
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteUser(int id)
         {
@@ -167,8 +167,7 @@ namespace PricingMvp.Api.Controllers
             return Ok(new { message = "Role actualizado", role = user.Role.ToString() });
         }
 
-        // POST: api/users
-        // Admin only: crear usuario (con role asignado)
+        // POST: /api/users - Crea un usuario nuevo (solo Admin puede crear con rol asignado)
         [HttpPost]
         public async Task<ActionResult> CreateUser([FromBody] AdminCreateUserDto dto)
         {
@@ -178,7 +177,7 @@ namespace PricingMvp.Api.Controllers
             if (string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.Password) || string.IsNullOrWhiteSpace(dto.FullName) || string.IsNullOrWhiteSpace(dto.Role))
                 return BadRequest(new { message = "Email, Password, FullName y Role son requeridos" });
 
-            // Optional: keep same domain restriction as public register
+            // Opcional: mantener la misma restricción de dominio que el registro público
             var allowedDomain = "@posadas.com";
             if (!dto.Email.EndsWith(allowedDomain, StringComparison.OrdinalIgnoreCase))
                 return BadRequest(new { message = $"Solo se permiten registros con el dominio '{allowedDomain}'" });

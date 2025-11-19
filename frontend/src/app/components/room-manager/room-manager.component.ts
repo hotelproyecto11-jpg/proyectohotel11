@@ -17,7 +17,7 @@ export class RoomManagerComponent implements OnInit {
   isLoading = false;
   errorMessage = '';
   successMessage = '';
-  // Edit state
+  // Estado de edición
   editingRoomId: number | null = null;
   editModel: any = {
     basePrice: 0,
@@ -177,7 +177,7 @@ export class RoomManagerComponent implements OnInit {
   }
 
   saveEdit(room: any): void {
-    // Basic validation
+    // Validación básica
     if (this.editModel.basePrice <= 0 || this.editModel.capacity <= 0) {
       this.errorMessage = 'Precio base y capacidad deben ser mayores a 0';
       return;

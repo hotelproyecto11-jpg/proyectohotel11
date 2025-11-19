@@ -22,22 +22,22 @@ namespace PricingMvp.Api.Controllers
             _configuration = configuration;
         }
         
+        // POST: /api/auth/login - Autentica un usuario y retorna JWT token
         [HttpPost("login")]
         public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginRequestDto request)
         {
-            // 1. Buscar usuario
+            // 1. Buscar usuario activo por email
             var user = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == request.Email && u.IsActive);
             
             if (user == null)
                 return Unauthorized(new { message = "Usuario o contraseña incorrectos" });
             
-            // 2. Verificar contraseña (en MVP simplificado)
-            // En producción usa BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash)
+            // 2. Verificar contraseña con BCrypt
             if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
                 return Unauthorized(new { message = "Usuario o contraseña incorrectos" });
             
-            // 3. Generar JWT token
+            // 3. Generar JWT token con claims del usuario
             var token = GenerateJwtToken(user);
             
             return Ok(new LoginResponseDto
@@ -50,24 +50,25 @@ namespace PricingMvp.Api.Controllers
             });
         }
 
+        // POST: /api/auth/register - Registra un nuevo usuario (solo dominios corporativos)
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] PricingMvp.Application.DTOs.RegisterRequestDto request)
         {
-            // Validate model state (data annotations)
+            // Validar modelo (anotaciones de datos)
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // Only allow registrations with the corporate domain
+            // Solo permitir registros con dominio corporativo
             var allowedDomain = "@posadas.com";
             if (!request.Email.EndsWith(allowedDomain, StringComparison.OrdinalIgnoreCase))
                 return BadRequest(new { message = $"Solo se permiten registros con el dominio '{allowedDomain}'" });
 
-            // Check existing
+            // Verificar que el usuario no exista ya
             var existing = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
             if (existing != null)
                 return BadRequest(new { message = "Usuario ya existe" });
 
-            // Assign default role - Admin must assign others later
+            // Asignar rol por defecto - Solo admin puede cambiar después
             Domain.Enums.UserRole role = Domain.Enums.UserRole.StaffOperativo;
 
             var user = new Domain.Entities.User

@@ -18,8 +18,7 @@ namespace PricingMvp.Api.Controllers
             _mlClient = mlClient;
         }
 
-        // POST: api/ml/train
-        // Exporta datos de PriceHistory (últimos 180 días) y llama al servicio ML /train
+        // POST: /api/ml/train - Entrena el modelo ML con datos de historial de precios
         [HttpPost("train")]
         public async Task<IActionResult> Train()
         {

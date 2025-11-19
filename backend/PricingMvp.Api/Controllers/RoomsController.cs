@@ -10,7 +10,7 @@ namespace PricingMvp.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize] // Requiere autenticación
+    [Authorize] // Requiere autenticación JWT
     public class RoomsController : ControllerBase
     {
         private readonly IApplicationDbContext _context;
@@ -20,11 +20,11 @@ namespace PricingMvp.Api.Controllers
             _context = context;
         }
         
-        // GET: api/rooms
+        // GET: /api/rooms - Obtiene todas las habitaciones (filtra por hotel si es admin regular)
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RoomDto>>> GetRooms([FromQuery] int? hotelId = null)
         {
-            // Obtener email y role del usuario autenticado
+            // Obtener email y rol del usuario autenticado desde el JWT token
             var currentUserEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
             var currentUserRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
             
@@ -64,7 +64,7 @@ namespace PricingMvp.Api.Controllers
             return Ok(rooms);
         }
         
-        // GET: api/rooms/5
+        // GET: /api/rooms/{id} - Obtiene una habitación específica por ID
         [HttpGet("{id}")]
         public async Task<ActionResult<RoomDto>> GetRoom(int id)
         {
@@ -88,7 +88,7 @@ namespace PricingMvp.Api.Controllers
             return Ok(room);
         }
         
-        // POST: api/rooms
+        // POST: /api/rooms - Crea una nueva habitación (solo Admin)
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<RoomDto>> CreateRoom([FromBody] CreateRoomDto dto)
@@ -120,7 +120,7 @@ namespace PricingMvp.Api.Controllers
                 });
         }
         
-        // PUT: api/rooms/5
+        // PUT: /api/rooms/{id} - Actualiza una habitación existente (Admin y RevenueManager)
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin,RevenueManager")]
         public async Task<IActionResult> UpdateRoom(int id, [FromBody] UpdateRoomDto dto)
@@ -140,7 +140,7 @@ namespace PricingMvp.Api.Controllers
             return NoContent();
         }
         
-        // DELETE: api/rooms/5
+        // DELETE: /api/rooms/{id} - Elimina una habitación (solo Admin)
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteRoom(int id)
